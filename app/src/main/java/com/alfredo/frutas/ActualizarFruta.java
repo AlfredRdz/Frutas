@@ -60,7 +60,7 @@ public class ActualizarFruta extends AppCompatActivity {
                 frutaCon.open();
 
                 frutaCon.eliminarFruta(Integer.valueOf(id));
-                Toast.makeText(ActualizarFruta.this, "Se ha eliminado el producto", Toast.LENGTH_LONG).show();
+                Toast.makeText(ActualizarFruta.this, "Se ha eliminado la fruta", Toast.LENGTH_LONG).show();
                 finish();
             }
         });
