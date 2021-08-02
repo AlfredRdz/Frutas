@@ -2,10 +2,12 @@ package com.alfredo.frutas;
 
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -44,6 +46,14 @@ public class FrutaAdapter extends RecyclerView.Adapter<FrutaAdapter.MyViewHolder
         holder.txt_color.setText(fruta.getColor());
         holder.txt_cantidad.setText(Integer.toString(fruta.getCantidad()));
 
+        String imagen = fruta.getImagen();
+
+        if (imagen.equals("null")){
+            holder.imageView.setImageResource(R.drawable.ic_datos);
+        } else {
+            holder.imageView.setImageURI(Uri.parse(imagen));
+        }
+
 
         holder.fila.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -67,12 +77,14 @@ public class FrutaAdapter extends RecyclerView.Adapter<FrutaAdapter.MyViewHolder
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
         TextView txt_nombre, txt_cantidad, txt_color;
+        ImageView imageView;
         LinearLayout fila;
         public MyViewHolder(@NonNull View itemView) {
             super(itemView);
             txt_nombre = itemView.findViewById(R.id.txt_nombre);
             txt_cantidad = itemView.findViewById(R.id.txt_cantidad);
             txt_color = itemView.findViewById(R.id.txt_color);
+            imageView = itemView.findViewById(R.id.imageView);
             fila = itemView.findViewById(R.id.fila);
         }
     }

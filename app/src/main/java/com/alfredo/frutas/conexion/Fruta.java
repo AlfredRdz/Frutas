@@ -15,11 +15,24 @@ public class Fruta {
         this.imagen = imagen;
     }
 
+    public Fruta(Integer id_fruta, String nombre, String color, Integer cantidad) {
+        this.id_fruta = id_fruta;
+        this.nombre = nombre;
+        this.color = color;
+        this.cantidad = cantidad;
+    }
+
     public Fruta(String nombre, String color, Integer cantidad, String imagen) {
         this.nombre = nombre;
         this.color = color;
         this.cantidad = cantidad;
         this.imagen = imagen;
+    }
+
+    public Fruta(String nombre, String color, Integer cantidad) {
+        this.nombre = nombre;
+        this.color = color;
+        this.cantidad = cantidad;
     }
 
     public Integer getId_fruta() {

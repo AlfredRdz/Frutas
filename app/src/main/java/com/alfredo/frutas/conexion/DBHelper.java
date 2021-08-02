@@ -13,10 +13,18 @@ public class DBHelper extends SQLiteOpenHelper {
         super(context, BASEDEDATOS, null, VERSION);
     }
 
+    public static final String TABLA_FRUTAS = "CREATE TABLE FRUTAS "
+            + "( id_fruta INTEGER PRIMARY KEY AUTOINCREMENT, "
+            + " nombre TEXT, "
+            + " color TEXT, "
+            + " cantidad TEXT, "
+            + " imagen TEXT DEFAULT 'null' "
+            +");";
+
     @Override
     public void onCreate(SQLiteDatabase db) {
         db.execSQL("CREATE TABLE USUARIO (id_usuario INTEGER PRIMARY KEY AUTOINCREMENT, usuario TEXT, contraseña TEXT);");
-        db.execSQL("CREATE TABLE FRUTAS (id_fruta INTEGER PRIMARY KEY AUTOINCREMENT, nombre TEXT, color TEXT, cantidad INTEGER, imagen TEXT)");
+        db.execSQL("CREATE TABLE FRUTAS ( id_fruta INTEGER PRIMARY KEY AUTOINCREMENT, nombre TEXT, color TEXT, cantidad TEXT, imagen TEXT DEFAULT null)");
     }
 
     @Override
