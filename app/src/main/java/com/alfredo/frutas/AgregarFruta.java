@@ -83,7 +83,7 @@ public class AgregarFruta extends AppCompatActivity {
                         finish();
                         Toast.makeText(getApplicationContext(), "Registro exitoso", Toast.LENGTH_LONG).show();
                     } else {
-                        Fruta fruta = new Fruta(nombre, color, cantidad);
+                        Fruta fruta = new Fruta(nombre, color, cantidad, "null");
                         frutaCon.agregarFruta(fruta);
                         finish();
                         Toast.makeText(getApplicationContext(), "Registro exitoso", Toast.LENGTH_LONG).show();
@@ -201,24 +201,34 @@ public class AgregarFruta extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
 
         if (resultCode == RESULT_OK){
+            //imagen es elegida
             if (requestCode == IMAGE_PICK_GALLERY_CODE){
+                //elegida de la galerai
+                //crop image
                 CropImage.activity(data.getData())
                         .setGuidelines(CropImageView.Guidelines.ON)
                         .setAspectRatio(1, 1)
                         .start(this);
-            } else if (requestCode == IMAGE_PICK_CAMERA_CODE){
-                CropImage.activity(data.getData())
+            }else if (requestCode == IMAGE_PICK_CAMERA_CODE){
+                //elegida de camara
+                //crop iamge
+                CropImage.activity(imagenUri)
                         .setGuidelines(CropImageView.Guidelines.ON)
                         .setAspectRatio(1, 1)
                         .start(this);
-            } else if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE){
+            }else if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE){
+                //crop imagen recibida
                 CropImage.ActivityResult result = CropImage.getActivityResult(data);
-                if (resultCode == RESULT_OK) {
+                if (resultCode == RESULT_OK){
                     Uri resultUri = result.getUri();
                     imagenUri = resultUri;
+                    //set image
                     imageViewFruta.setImageURI(resultUri);
-                } else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
-                    Exception error = result.getError();
+                }else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE){
+                    //error
+                    Exception exception = result.getError();
+                    Toast.makeText(AgregarFruta.this, ""+ exception, Toast.LENGTH_LONG).show();
+
                 }
             }
         }

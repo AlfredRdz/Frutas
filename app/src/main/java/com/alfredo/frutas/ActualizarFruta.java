@@ -23,6 +23,8 @@ import android.widget.Toast;
 
 import com.alfredo.frutas.conexion.Fruta;
 import com.alfredo.frutas.conexion.FrutaCon;
+import com.theartofdev.edmodo.cropper.CropImage;
+import com.theartofdev.edmodo.cropper.CropImageView;
 
 public class ActualizarFruta extends AppCompatActivity {
 
@@ -55,6 +57,9 @@ public class ActualizarFruta extends AppCompatActivity {
         btn_agregarFruta = findViewById(R.id.btn_agregarFruta);
         btn_eliminar = findViewById(R.id.btn_eliminar);
 
+        permisoCamara = new String[]{Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE};
+        permisoAlmacenamiento = new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE};
+
         imageView2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -74,7 +79,7 @@ public class ActualizarFruta extends AppCompatActivity {
                     String color = edt_colorAC.getText().toString();
                     Integer cantidad = Integer.parseInt(edt_cantidadAC.getText().toString());
 
-                    if (imagenUri.getPath() != null){
+                    if (!imagenUri.toString().equals("null")){
                         Fruta fruta = new Fruta(Integer.valueOf(id), nombre, color, cantidad, imagenUri.getPath());
                         frutaCon.actualizarFruta(fruta);
 
@@ -211,14 +216,35 @@ public class ActualizarFruta extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
 
         if (resultCode == RESULT_OK){
+            //imagen es elegida
             if (requestCode == IMAGE_PICK_GALLERY_CODE){
-                Uri resultUri = data.getData();
-                imagenUri = resultUri;
-                imageView2.setImageURI(imagenUri);
-            } else {
-                Uri resultUri = data.getData();
-                imagenUri = resultUri;
-                imageView2.setImageURI(imagenUri);
+                //elegida de la galerai
+                //crop image
+                CropImage.activity(data.getData())
+                        .setGuidelines(CropImageView.Guidelines.ON)
+                        .setAspectRatio(1, 1)
+                        .start(this);
+            }else if (requestCode == IMAGE_PICK_CAMERA_CODE){
+                //elegida de camara
+                //crop iamge
+                CropImage.activity(imagenUri)
+                        .setGuidelines(CropImageView.Guidelines.ON)
+                        .setAspectRatio(1, 1)
+                        .start(this);
+            }else if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE){
+                //crop imagen recibida
+                CropImage.ActivityResult result = CropImage.getActivityResult(data);
+                if (resultCode == RESULT_OK){
+                    Uri resultUri = result.getUri();
+                    imagenUri = resultUri;
+                    //set image
+                    imageView2.setImageURI(resultUri);
+                }else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE){
+                    //error
+                    Exception exception = result.getError();
+                    Toast.makeText(ActualizarFruta.this, ""+ exception, Toast.LENGTH_LONG).show();
+
+                }
             }
         }
     }
@@ -229,16 +255,16 @@ public class ActualizarFruta extends AppCompatActivity {
             nombre = getIntent().getStringExtra("nombre");
             color = getIntent().getStringExtra("color");
             cantidad = getIntent().getStringExtra("cantidad");
-            imagen = getIntent().getStringExtra("imagen");
+            imagenUri = Uri.parse(getIntent().getStringExtra("imagen"));
 
             edt_nombreAC.setText(nombre);
             edt_colorAC.setText(color);
             edt_cantidadAC.setText(cantidad);
 
-            if (imagen.equals("null")){
+            if (imagenUri.equals("null")){
                 imageView2.setImageResource(R.drawable.ic_datos);
             } else {
-                imageView2.setImageURI(Uri.parse(imagen));
+                imageView2.setImageURI(imagenUri);
             }
 
         }
