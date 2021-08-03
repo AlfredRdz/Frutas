@@ -23,12 +23,13 @@ import android.widget.Toast;
 
 import com.alfredo.frutas.conexion.Fruta;
 import com.alfredo.frutas.conexion.FrutaCon;
+import com.google.android.material.textfield.TextInputEditText;
 import com.theartofdev.edmodo.cropper.CropImage;
 import com.theartofdev.edmodo.cropper.CropImageView;
 
 public class ActualizarFruta extends AppCompatActivity {
 
-    EditText edt_nombreAC, edt_colorAC, edt_cantidadAC;
+    TextInputEditText edt_nombreAC, edt_colorAC, edt_cantidadAC;
     ImageView imageView2;
     Button btn_agregarFruta, btn_eliminar;
     String id, nombre, color, cantidad, imagen;
@@ -86,7 +87,7 @@ public class ActualizarFruta extends AppCompatActivity {
                         Toast.makeText(ActualizarFruta.this, "Se ha actualizado la fruta", Toast.LENGTH_LONG).show();
                         finish();
                     } else {
-                        Fruta fruta = new Fruta(Integer.valueOf(id), nombre, color, cantidad);
+                        Fruta fruta = new Fruta(Integer.valueOf(id), nombre, color, cantidad, null);
                         frutaCon.actualizarFruta(fruta);
 
                         Toast.makeText(ActualizarFruta.this, "Se ha actualizado la fruta", Toast.LENGTH_LONG).show();
@@ -155,7 +156,7 @@ public class ActualizarFruta extends AppCompatActivity {
         imagenUri = getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
 
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        intent.putExtra(MediaStore.EXTRA_OUTPUT, intent);
+        intent.putExtra(MediaStore.EXTRA_OUTPUT, imagenUri);
         startActivityForResult(intent, IMAGE_PICK_CAMERA_CODE);
     }
 
@@ -261,7 +262,7 @@ public class ActualizarFruta extends AppCompatActivity {
             edt_colorAC.setText(color);
             edt_cantidadAC.setText(cantidad);
 
-            if (imagenUri.equals("null")){
+            if (imagenUri == null){
                 imageView2.setImageResource(R.drawable.ic_datos);
             } else {
                 imageView2.setImageURI(imagenUri);

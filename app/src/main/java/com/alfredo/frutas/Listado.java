@@ -1,13 +1,17 @@
 package com.alfredo.frutas;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AbsListView;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Toast;
@@ -33,7 +37,10 @@ public class Listado extends AppCompatActivity {
         recyclerView = findViewById(R.id.recyclerView);
         imageView_vaciop = findViewById(R.id.imageView_vaciop);
 
-        recyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
+//        recyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
+//        recyclerView.setHasFixedSize(true);
+
+        recyclerView.setLayoutManager(new GridLayoutManager(this, 2));
         recyclerView.setHasFixedSize(true);
 
         FrutaCon frutaCon = new FrutaCon(getApplicationContext());

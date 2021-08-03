@@ -15,8 +15,9 @@
         android:hardwareAccelerated="true"
         android:supportsRtl="true"
         android:theme="@style/Theme.Frutas">
-        <activity android:name=".AgregarFruta" />
-        <activity android:name=".ActualizarFruta" />
+        <activity android:name=".AgregarFruta"
+            android:parentActivityName=".Listado"/>
+        <activity android:name=".ActualizarFruta"/>
         <activity android:name=".Listado" />
         <activity android:name=".Registro" />
         <activity android:name=".MainActivity">

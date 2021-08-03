@@ -17,18 +17,19 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.alfredo.frutas.conexion.Fruta;
 import com.alfredo.frutas.conexion.FrutaCon;
+import com.google.android.material.textfield.TextInputEditText;
+import com.google.android.material.textfield.TextInputLayout;
 import com.theartofdev.edmodo.cropper.CropImage;
 import com.theartofdev.edmodo.cropper.CropImageView;
 
 public class AgregarFruta extends AppCompatActivity {
     Button btn_agregarFruta;
-    EditText edt_nombre, edt_color, edt_cantidad;
+    TextInputEditText edt_nombre, edt_color, edt_cantidad;
     ImageView imageViewFruta;
 
 
@@ -83,7 +84,7 @@ public class AgregarFruta extends AppCompatActivity {
                         finish();
                         Toast.makeText(getApplicationContext(), "Registro exitoso", Toast.LENGTH_LONG).show();
                     } else {
-                        Fruta fruta = new Fruta(nombre, color, cantidad, "null");
+                        Fruta fruta = new Fruta(nombre, color, cantidad);
                         frutaCon.agregarFruta(fruta);
                         finish();
                         Toast.makeText(getApplicationContext(), "Registro exitoso", Toast.LENGTH_LONG).show();
