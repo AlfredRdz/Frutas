@@ -17,7 +17,8 @@
         android:theme="@style/Theme.Frutas">
         <activity android:name=".AgregarFruta"
             android:parentActivityName=".Listado"/>
-        <activity android:name=".ActualizarFruta"/>
+        <activity android:name=".ActualizarFruta"
+            android:parentActivityName=".Listado"/>
         <activity android:name=".Listado" />
         <activity android:name=".Registro" />
         <activity android:name=".MainActivity">
