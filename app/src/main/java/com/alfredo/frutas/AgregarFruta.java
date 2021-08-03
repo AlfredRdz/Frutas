@@ -15,6 +15,8 @@ import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -28,7 +30,6 @@ import com.theartofdev.edmodo.cropper.CropImage;
 import com.theartofdev.edmodo.cropper.CropImageView;
 
 public class AgregarFruta extends AppCompatActivity {
-    Button btn_agregarFruta;
     TextInputEditText edt_nombre, edt_color, edt_cantidad;
     ImageView imageViewFruta;
 
@@ -54,7 +55,6 @@ public class AgregarFruta extends AppCompatActivity {
         edt_color = findViewById(R.id.edt_color);
         edt_cantidad = findViewById(R.id.edt_cantidad);
         imageViewFruta = findViewById(R.id.imageViewFruta);
-        btn_agregarFruta = findViewById(R.id.btn_agregarFruta);
 
         permisoCamara = new String[]{Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE};
         permisoAlmacenamiento = new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE};
@@ -66,10 +66,17 @@ public class AgregarFruta extends AppCompatActivity {
             }
         });
 
+    }
 
-        btn_agregarFruta.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+    public boolean onCreateOptionsMenu(Menu menu){
+        getMenuInflater().inflate(R.menu.barra, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.guardarMenu:
                 if (edt_nombre.getText().length() > 0 && edt_color.getText().length() > 0 && edt_cantidad.getText().length() > 0){
                     FrutaCon frutaCon = new FrutaCon(getApplicationContext());
                     frutaCon.open();
@@ -92,8 +99,13 @@ public class AgregarFruta extends AppCompatActivity {
                 }else{
                     Toast.makeText(getApplicationContext(), "Error", Toast.LENGTH_LONG).show();
                 }
-            }
-        });
+                return true;
+
+            default:
+
+                return super.onOptionsItemSelected(item);
+
+        }
     }
 
     private void SeleccionarImagen() {

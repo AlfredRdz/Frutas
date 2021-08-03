@@ -15,6 +15,8 @@ import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -31,7 +33,6 @@ public class ActualizarFruta extends AppCompatActivity {
 
     TextInputEditText edt_nombreAC, edt_colorAC, edt_cantidadAC;
     ImageView imageView2;
-    Button btn_agregarFruta, btn_eliminar;
     String id, nombre, color, cantidad, imagen;
 
     private static final int CAMERA_REQUEST_CODE = 100;
@@ -55,8 +56,7 @@ public class ActualizarFruta extends AppCompatActivity {
         edt_colorAC = findViewById(R.id.edt_colorAC);
         edt_cantidadAC = findViewById(R.id.edt_cantidadAC);
         imageView2 = findViewById(R.id.imageView2);
-        btn_agregarFruta = findViewById(R.id.btn_agregarFruta);
-        btn_eliminar = findViewById(R.id.btn_eliminar);
+
 
         permisoCamara = new String[]{Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE};
         permisoAlmacenamiento = new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE};
@@ -69,9 +69,18 @@ public class ActualizarFruta extends AppCompatActivity {
         });
 
         getIntentData();
-        btn_agregarFruta.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+
+    }
+
+    public boolean onCreateOptionsMenu(Menu menu){
+        getMenuInflater().inflate(R.menu.barra, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.guardarMenu:
                 if (edt_nombreAC.getText().length() > 0 && edt_colorAC.getText().length() > 0){
                     FrutaCon frutaCon = new FrutaCon(getApplicationContext());
                     frutaCon.open();
@@ -97,20 +106,12 @@ public class ActualizarFruta extends AppCompatActivity {
                 }else{
                     Toast.makeText(ActualizarFruta.this, "Hubo un error", Toast.LENGTH_LONG).show();
                 }
-            }
-        });
+                return true;
 
-        btn_eliminar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                FrutaCon frutaCon = new FrutaCon(getBaseContext());
-                frutaCon.open();
+            default:
+                return super.onOptionsItemSelected(item);
 
-                frutaCon.eliminarFruta(Integer.valueOf(id));
-                Toast.makeText(ActualizarFruta.this, "Se ha eliminado la fruta", Toast.LENGTH_LONG).show();
-                finish();
-            }
-        });
+        }
     }
 
     private void seleccionarImagen() {
