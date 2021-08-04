@@ -18,8 +18,12 @@ import android.provider.MediaStore;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.alfredo.frutas.conexion.Fruta;
@@ -29,10 +33,14 @@ import com.google.android.material.textfield.TextInputLayout;
 import com.theartofdev.edmodo.cropper.CropImage;
 import com.theartofdev.edmodo.cropper.CropImageView;
 
+import java.util.ArrayList;
+
 public class AgregarFruta extends AppCompatActivity {
     TextInputEditText edt_nombre, edt_color, edt_cantidad;
     ImageView imageViewFruta;
+    Spinner spinner_fruta;
 
+    ArrayAdapter<String> adapter;
 
     private static final int CAMERA_REQUEST_CODE = 100;
     private static final int STORAGE_REQUEST_CODE = 101;
@@ -42,6 +50,7 @@ public class AgregarFruta extends AppCompatActivity {
 
     String [] permisoCamara;
     String [] permisoAlmacenamiento;
+    String item_seleccionado;
 
 
     Uri imagenUri;
@@ -52,9 +61,26 @@ public class AgregarFruta extends AppCompatActivity {
         setContentView(R.layout.activity_agregar_fruta);
 
         edt_nombre = findViewById(R.id.edt_nombre);
-        edt_color = findViewById(R.id.edt_color);
         edt_cantidad = findViewById(R.id.edt_cantidad);
         imageViewFruta = findViewById(R.id.imageViewFruta);
+        spinner_fruta = findViewById(R.id.spinner_fruta);
+
+        adapter = new ArrayAdapter<String>(getApplicationContext(), android.R.layout.simple_list_item_1, getResources().getStringArray(R.array.spinner));
+        spinner_fruta.setAdapter(adapter);
+
+
+        spinner_fruta.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                item_seleccionado = (String) parent.getItemAtPosition(position);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+
 
         permisoCamara = new String[]{Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE};
         permisoAlmacenamiento = new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE};
@@ -77,7 +103,7 @@ public class AgregarFruta extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.guardarMenu:
-                if (edt_nombre.getText().length() > 0 && edt_color.getText().length() > 0 && edt_cantidad.getText().length() > 0){
+                if (edt_nombre.getText().length() > 0 && edt_color.getText().length() > 0 && edt_cantidad.getText().length() > 0 && edt_cantidad.getText().length() <8){
                     FrutaCon frutaCon = new FrutaCon(getApplicationContext());
                     frutaCon.open();
 
@@ -86,17 +112,20 @@ public class AgregarFruta extends AppCompatActivity {
                     Integer cantidad = Integer.parseInt(edt_cantidad.getText().toString());
 
                     if (imagenUri != null){
-                        Fruta fruta = new Fruta(nombre, color, cantidad, imagenUri.getPath());
+                        Fruta fruta = new Fruta(nombre, item_seleccionado, cantidad, imagenUri.getPath());
                         frutaCon.agregarFruta(fruta);
                         finish();
-                        Toast.makeText(getApplicationContext(), "Registro exitoso", Toast.LENGTH_LONG).show();
+                        //Toast.makeText(getApplicationContext(), "Registro exitoso", Toast.LENGTH_LONG).show();
                     } else {
-                        Fruta fruta = new Fruta(nombre, color, cantidad);
+                        Fruta fruta = new Fruta(nombre, item_seleccionado, cantidad);
                         frutaCon.agregarFruta(fruta);
                         finish();
-                        Toast.makeText(getApplicationContext(), "Registro exitoso", Toast.LENGTH_LONG).show();
+                        //Toast.makeText(getApplicationContext(), "Registro exitoso", Toast.LENGTH_LONG).show();
+                        Toast.makeText(getApplicationContext(), "seleccionar un color: " + item_seleccionado, Toast.LENGTH_LONG).show();
                     }
                 }else{
+                    edt_cantidad.requestFocus();
+                    edt_cantidad.setError("Max. 7 Caracteres");
                     Toast.makeText(getApplicationContext(), "Error", Toast.LENGTH_LONG).show();
                 }
                 return true;

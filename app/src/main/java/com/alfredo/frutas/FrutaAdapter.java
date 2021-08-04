@@ -8,12 +8,11 @@ import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.GridLayout;
+import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
+import android.widget.SearchView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
@@ -22,7 +21,11 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.alfredo.frutas.conexion.Fruta;
 import com.alfredo.frutas.conexion.FrutaCon;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class FrutaAdapter extends RecyclerView.Adapter<FrutaAdapter.MyViewHolder> {
 
@@ -77,7 +80,11 @@ public class FrutaAdapter extends RecyclerView.Adapter<FrutaAdapter.MyViewHolder
                                 frutaCon.open();
 
                                 frutaCon.eliminarFruta(fruta.getId_fruta());
-                                Toast.makeText(v.getContext(), "Se ha eliminado la fruta", Toast.LENGTH_LONG).show();
+                                notifyDataSetChanged();
+
+                                Intent intent = new Intent(context, Listado.class);
+                                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                context.startActivity(intent);
                             }
                         })
                         .setNegativeButton("no", new DialogInterface.OnClickListener() {
@@ -107,9 +114,40 @@ public class FrutaAdapter extends RecyclerView.Adapter<FrutaAdapter.MyViewHolder
 
     }
 
+//    public void filtrado(String txtbuscar){
+//        int logitud = txtbuscar.length();
+//        if (logitud == 0 ){
+//            frutas.clear();
+//            frutas.addAll(frutaOriginal);
+//        } else {
+//            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
+//                List<Fruta> collection = frutas.stream()
+//                        .filter(i -> i.getNombre().toLowerCase().contains(txtbuscar.toLowerCase())).collect(Collectors.toList());
+//                frutas.clear();
+//                frutas.addAll(collection);
+//            } else {
+//                for (Fruta f: frutaOriginal){
+//                    if (f.getNombre().toLowerCase().contains(txtbuscar.toLowerCase())){
+//                        frutas.add(f);
+//                    }
+//                }
+//            }
+//        }
+//        notifyDataSetChanged();
+//    }
+
     @Override
     public int getItemCount() {
         return frutas.size();
+    }
+
+
+    public void setFilter(ArrayList<Fruta> newList) {
+
+        frutas = new ArrayList<>();
+        frutas.addAll(newList);
+        notifyDataSetChanged();
+
     }
 
     public class MyViewHolder extends RecyclerView.ViewHolder {

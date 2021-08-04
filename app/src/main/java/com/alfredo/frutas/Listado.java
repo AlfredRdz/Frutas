@@ -1,6 +1,8 @@
 package com.alfredo.frutas;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.SearchView;
+import androidx.core.view.MenuItemCompat;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -9,6 +11,8 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
@@ -20,13 +24,18 @@ import com.alfredo.frutas.conexion.Fruta;
 import com.alfredo.frutas.conexion.FrutaCon;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
-public class Listado extends AppCompatActivity {
+public class Listado extends AppCompatActivity implements SearchView.OnQueryTextListener {
 
     FloatingActionButton btn_agregar;
     RecyclerView recyclerView;
     ImageView imageView_vaciop;
+
+    FrutaAdapter customAdapter;
+    List<Fruta> lista ;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,10 +54,10 @@ public class Listado extends AppCompatActivity {
 
         FrutaCon frutaCon = new FrutaCon(getApplicationContext());
         frutaCon.open();
-        List<Fruta> lista = frutaCon.obtenerFrutas();
+        lista = frutaCon.obtenerFrutas();
 
         if (lista.size() > 0){
-            FrutaAdapter customAdapter = new FrutaAdapter(lista, getApplicationContext());
+            customAdapter = new FrutaAdapter(lista, getApplicationContext());
             recyclerView.setAdapter(customAdapter);
             imageView_vaciop.setVisibility(View.GONE);
         }else{
@@ -70,7 +79,7 @@ public class Listado extends AppCompatActivity {
 
         FrutaCon frutaCon = new FrutaCon(getApplicationContext());
         frutaCon.open();
-        List<Fruta> lista = frutaCon.obtenerFrutas();
+        lista = frutaCon.obtenerFrutas();
 
         if (lista.size() > 0){
             FrutaAdapter customAdapter = new FrutaAdapter(lista, getApplicationContext());
@@ -80,4 +89,39 @@ public class Listado extends AppCompatActivity {
             imageView_vaciop.setVisibility(View.VISIBLE);
         }
     }
+
+    public boolean onCreateOptionsMenu(Menu menu){
+        getMenuInflater().inflate(R.menu.barra_busqueda, menu);
+        MenuItem item = menu.findItem(R.id.app_bar_search);
+        SearchView searchView = (SearchView) MenuItemCompat.getActionView(item);
+        searchView.setOnQueryTextListener(this);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item){
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public boolean onQueryTextSubmit(String query) {
+        //customAdapter.getFilter().filter(query);
+        return false;
+    }
+
+    @Override
+    public boolean onQueryTextChange(String newText) {
+        newText = newText.toLowerCase();
+        ArrayList<Fruta> list = new ArrayList<>();
+        for (Fruta fruta: lista){
+            String nombre = fruta.getNombre().toLowerCase();
+            if (nombre.contains(newText)){
+                list.add(fruta);
+            }
+        }
+
+        customAdapter.setFilter(list);
+        return true;
+    }
+
 }

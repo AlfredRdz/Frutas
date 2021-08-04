@@ -18,33 +18,20 @@
         app:srcCompat="@drawable/ic_baseline_add_24" />
 
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/textInputLayout3"
-        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="20dp"
-        android:layout_marginTop="20dp"
-        app:boxBackgroundMode="outline"
-        app:layout_constraintTop_toBottomOf="@+id/textInputLayout"
-        tools:layout_editor_absoluteX="18dp">
-
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/edt_colorAC"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Color" />
-    </com.google.android.material.textfield.TextInputLayout>
-
-    <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/textInputLayout4"
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="20dp"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="16dp"
         app:boxBackgroundMode="outline"
-        app:layout_constraintTop_toBottomOf="@+id/textInputLayout3"
-        tools:layout_editor_absoluteX="18dp">
+        app:counterEnabled="true"
+        app:counterMaxLength="7"
+        app:endIconMode="clear_text"
+        app:errorEnabled="true"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/spinner_agregar">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/edt_cantidadAC"
@@ -62,6 +49,7 @@
         android:layout_margin="20dp"
         android:layout_marginTop="20dp"
         app:boxBackgroundMode="outline"
+        app:endIconMode="clear_text"
         app:layout_constraintTop_toBottomOf="@+id/imageView2"
         tools:layout_editor_absoluteX="18dp">
 
@@ -71,5 +59,15 @@
             android:layout_height="wrap_content"
             android:hint="Nombre" />
     </com.google.android.material.textfield.TextInputLayout>
+
+    <Spinner
+        android:id="@+id/spinner_agregar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:layout_margin="20dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textInputLayout" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

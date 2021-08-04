@@ -23,6 +23,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:layout_margin="20dp"
+        app:endIconMode="clear_text"
         app:boxBackgroundMode="outline"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -36,43 +37,60 @@
 
     </com.google.android.material.textfield.TextInputLayout>
 
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/il_color"
+    <!--        <com.google.android.material.textfield.TextInputLayout-->
+    <!--        android:id="@+id/il_spinner"-->
+    <!--        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"-->
+    <!--        android:layout_width="match_parent"-->
+    <!--        android:layout_height="wrap_content"-->
+    <!--        android:layout_margin="20dp"-->
+    <!--        android:layout_marginTop="16dp"-->
+    <!--        app:boxBackgroundMode="outline"-->
+    <!--        app:layout_constraintEnd_toEndOf="parent"-->
+    <!--        app:layout_constraintStart_toStartOf="parent"-->
+    <!--        app:layout_constraintTop_toBottomOf="@+id/il_cantidad">-->
+
+    <!--        <AutoCompleteTextView-->
+    <!--            android:id="@+id/spinner_fruta"-->
+    <!--            android:layout_width="match_parent"-->
+    <!--            android:layout_height="wrap_content"-->
+    <!--            android:hint="Selecciona:"-->
+    <!--            android:inputType="none"/>-->
+
+    <!--    </com.google.android.material.textfield.TextInputLayout>-->
+
+
+    <Spinner
+        android:id="@+id/spinner_fruta"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-        android:layout_marginTop="16dp"
         android:layout_margin="20dp"
-        app:boxBackgroundMode="outline"
+        android:layout_marginTop="16dp"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.4"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/il_nombre">
-
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/edt_color"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Color" />
-    </com.google.android.material.textfield.TextInputLayout>
+        app:layout_constraintTop_toBottomOf="@+id/il_cantidad" />
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/il_cantidad"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-        android:layout_marginTop="16dp"
         android:layout_margin="20dp"
+        android:layout_marginTop="16dp"
         app:boxBackgroundMode="outline"
-        app:layout_constraintTop_toBottomOf="@+id/il_color"
-        tools:layout_editor_absoluteX="181dp">
+        app:counterEnabled="true"
+        app:counterMaxLength="7"
+        app:endIconMode="clear_text"
+        app:errorEnabled="true"
+        app:layout_constraintTop_toBottomOf="@+id/il_nombre"
+        tools:layout_editor_absoluteX="24dp">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/edt_cantidad"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Cantidad"
-            android:inputType="number"/>
+            android:inputType="number" />
     </com.google.android.material.textfield.TextInputLayout>
-
 
 </androidx.constraintlayout.widget.ConstraintLayout>

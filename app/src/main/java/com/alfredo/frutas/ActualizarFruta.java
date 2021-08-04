@@ -18,9 +18,12 @@ import android.provider.MediaStore;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.alfredo.frutas.conexion.Fruta;
@@ -31,9 +34,12 @@ import com.theartofdev.edmodo.cropper.CropImageView;
 
 public class ActualizarFruta extends AppCompatActivity {
 
-    TextInputEditText edt_nombreAC, edt_colorAC, edt_cantidadAC;
+    TextInputEditText edt_nombreAC, edt_cantidadAC;
     ImageView imageView2;
     String id, nombre, color, cantidad, imagen;
+    Spinner spinner_agregar;
+
+    ArrayAdapter<CharSequence> adapter;
 
     private static final int CAMERA_REQUEST_CODE = 100;
     private static final int STORAGE_REQUEST_CODE = 101;
@@ -43,6 +49,7 @@ public class ActualizarFruta extends AppCompatActivity {
 
     String [] permisoCamara;
     String [] permisoAlmacenamiento;
+    String item_seleccionado;
 
 
     Uri imagenUri;
@@ -53,9 +60,25 @@ public class ActualizarFruta extends AppCompatActivity {
         setContentView(R.layout.activity_actualizar_fruta);
 
         edt_nombreAC = findViewById(R.id.edt_nombreAC);
-        edt_colorAC = findViewById(R.id.edt_colorAC);
         edt_cantidadAC = findViewById(R.id.edt_cantidadAC);
         imageView2 = findViewById(R.id.imageView2);
+        spinner_agregar = findViewById(R.id.spinner_agregar);
+
+        adapter = new ArrayAdapter<>(getApplicationContext(), android.R.layout.simple_list_item_1, getResources().getStringArray(R.array.spinner));
+        spinner_agregar.setAdapter(adapter);
+
+
+        spinner_agregar.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                item_seleccionado = (String) parent.getItemAtPosition(position);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
 
 
         permisoCamara = new String[]{Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE};
@@ -81,22 +104,21 @@ public class ActualizarFruta extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.guardarMenu:
-                if (edt_nombreAC.getText().length() > 0 && edt_colorAC.getText().length() > 0){
+                if (edt_nombreAC.getText().length() > 0 &&  edt_cantidadAC.getText().length() < 8){
                     FrutaCon frutaCon = new FrutaCon(getApplicationContext());
                     frutaCon.open();
 
                     String nombre = edt_nombreAC.getText().toString();
-                    String color = edt_colorAC.getText().toString();
                     Integer cantidad = Integer.parseInt(edt_cantidadAC.getText().toString());
 
                     if (!imagenUri.toString().equals("null")){
-                        Fruta fruta = new Fruta(Integer.valueOf(id), nombre, color, cantidad, imagenUri.getPath());
+                        Fruta fruta = new Fruta(Integer.valueOf(id), nombre, item_seleccionado, cantidad, imagenUri.getPath());
                         frutaCon.actualizarFruta(fruta);
 
                         Toast.makeText(ActualizarFruta.this, "Se ha actualizado la fruta", Toast.LENGTH_LONG).show();
                         finish();
                     } else {
-                        Fruta fruta = new Fruta(Integer.valueOf(id), nombre, color, cantidad, null);
+                        Fruta fruta = new Fruta(Integer.valueOf(id), nombre, item_seleccionado, cantidad, null);
                         frutaCon.actualizarFruta(fruta);
 
                         Toast.makeText(ActualizarFruta.this, "Se ha actualizado la fruta", Toast.LENGTH_LONG).show();
@@ -104,6 +126,8 @@ public class ActualizarFruta extends AppCompatActivity {
                     }
 
                 }else{
+                    edt_cantidadAC.requestFocus();
+                    edt_cantidadAC.setError("Max. 7 Caracteres");
                     Toast.makeText(ActualizarFruta.this, "Hubo un error", Toast.LENGTH_LONG).show();
                 }
                 return true;
@@ -260,8 +284,15 @@ public class ActualizarFruta extends AppCompatActivity {
             imagenUri = Uri.parse(getIntent().getStringExtra("imagen"));
 
             edt_nombreAC.setText(nombre);
-            edt_colorAC.setText(color);
             edt_cantidadAC.setText(cantidad);
+
+            adapter = new ArrayAdapter<>(getApplicationContext(), android.R.layout.simple_list_item_1, getResources().getStringArray(R.array.spinner));
+            spinner_agregar.setAdapter(adapter);
+            int position = adapter.getPosition(color);
+
+
+            spinner_agregar.setSelection(((ArrayAdapter<String>)spinner_agregar.getAdapter()).getPosition(color));
+//            combo_categoria.setSelection(Integer.parseInt(getIntent().getStringExtra("categoria")) - 1);
 
             if (imagenUri == null){
                 imageView2.setImageResource(R.drawable.ic_datos);
