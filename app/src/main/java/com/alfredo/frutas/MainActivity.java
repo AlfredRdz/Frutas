@@ -32,16 +32,15 @@ public class MainActivity extends AppCompatActivity {
         btn_ingresar = findViewById(R.id.btn_ingresar);
         btn_registrarse = findViewById(R.id.btn_registrarse);
 
-         preferences = getSharedPreferences("preferences", MODE_PRIVATE);
-        boolean estado = true;
-        editor = preferences.edit();
-        editor.putBoolean("estado_usuario", estado);
 
-        String nombreu = preferences.getString("estado_usuario", "no existe");
+        SharedPreferences sh = getSharedPreferences("preferences", MODE_PRIVATE);
+        String usuario = sh.getString("nombre", "");
+        String contraseña = sh.getString("contraseña", "");
 
 
 
-        if (nombreu.length() > 0 ) {
+
+        if (usuario.length() > 0 && contraseña.length() > 0) {
             Toast.makeText(getApplicationContext(), "sesion iniciada", Toast.LENGTH_LONG).show();
             startActivity(new Intent(this, Listado.class));
         } else {
@@ -70,6 +69,8 @@ public class MainActivity extends AppCompatActivity {
                     boolean comprobar = usuarioCon.login(nombre, contraseña);
 
                     if (comprobar == true){
+                        preferences = getSharedPreferences("preferences", MODE_PRIVATE);
+                        editor = preferences.edit();
                         editor.putString("nombre" , nombre);
                         editor.putString("contraseña", contraseña);
                         editor.commit();
@@ -85,13 +86,5 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
-    }
-
-    public void guardarEstado(){
-        SharedPreferences preferences = getSharedPreferences("preferences", MODE_PRIVATE);
-        boolean estado = true;
-        SharedPreferences.Editor editor = preferences.edit();
-        editor.putBoolean("estado_usuario", estado);
-        editor.commit();
     }
 }

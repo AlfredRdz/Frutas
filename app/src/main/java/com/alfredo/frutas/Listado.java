@@ -8,9 +8,12 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -106,8 +109,25 @@ public class Listado extends AppCompatActivity  {
                 return false;
             }
         });
-        return super.onCreateOptionsMenu(menu);
+        return true;
     }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.cerrar_sesion:
+                SharedPreferences prefs = this.getSharedPreferences("preferences", Context.MODE_PRIVATE);
+                SharedPreferences.Editor editor = prefs.edit();
+                editor.putString("nombre", "");     //RESET TO DEFAULT VALUE
+                editor.putString("contraseña", "");     //RESET TO DEFAULT VALUE
+                editor.commit();
+                startActivity(new Intent(this, MainActivity.class));
+                return true;
 
+            default:
+
+                return super.onOptionsItemSelected(item);
+
+        }
+    }
 }
