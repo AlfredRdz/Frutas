@@ -27,9 +27,10 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class FrutaAdapter extends RecyclerView.Adapter<FrutaAdapter.MyViewHolder> {
+public class FrutaAdapter extends RecyclerView.Adapter<FrutaAdapter.MyViewHolder> implements Filterable {
 
     List<Fruta> frutas;
+    List<Fruta> frutasAll;
     Context context;
     FrutaCon frutaCon;
 
@@ -37,6 +38,7 @@ public class FrutaAdapter extends RecyclerView.Adapter<FrutaAdapter.MyViewHolder
         this.frutas = frutas;
         this.context = context;
         frutaCon = new FrutaCon(context);
+        this.frutasAll = new ArrayList<>(frutas);
     }
 
     @NonNull
@@ -118,7 +120,7 @@ public class FrutaAdapter extends RecyclerView.Adapter<FrutaAdapter.MyViewHolder
 //        int logitud = txtbuscar.length();
 //        if (logitud == 0 ){
 //            frutas.clear();
-//            frutas.addAll(frutaOriginal);
+//            frutas.addAll(frutasFull);
 //        } else {
 //            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
 //                List<Fruta> collection = frutas.stream()
@@ -126,7 +128,7 @@ public class FrutaAdapter extends RecyclerView.Adapter<FrutaAdapter.MyViewHolder
 //                frutas.clear();
 //                frutas.addAll(collection);
 //            } else {
-//                for (Fruta f: frutaOriginal){
+//                for (Fruta f: frutasFull){
 //                    if (f.getNombre().toLowerCase().contains(txtbuscar.toLowerCase())){
 //                        frutas.add(f);
 //                    }
@@ -142,13 +144,45 @@ public class FrutaAdapter extends RecyclerView.Adapter<FrutaAdapter.MyViewHolder
     }
 
 
-    public void setFilter(ArrayList<Fruta> newList) {
+//    public void setFilter(ArrayList<Fruta> newList) {
+//
+//        frutas = new ArrayList<>();
+//        frutas.addAll(newList);
+//        notifyDataSetChanged();
+//
+//    }
 
-        frutas = new ArrayList<>();
-        frutas.addAll(newList);
-        notifyDataSetChanged();
-
+    @Override
+    public Filter getFilter() {
+        return FilterUser;
     }
+
+    private Filter FilterUser = new Filter() {
+        @Override
+        protected FilterResults performFiltering(CharSequence constraint) {
+            String search = constraint.toString().toLowerCase();
+            List<Fruta> templist = new ArrayList<>();
+            if (search.length() == 0 || search.isEmpty()){
+                templist.addAll(frutasAll);
+            } else {
+                for (Fruta f: frutasAll){
+                    if (f.getNombre().toLowerCase().contains(search)){
+                        templist.add(f);
+                    }
+                }
+            }
+            FilterResults filterResults = new FilterResults();
+            filterResults.values = templist;
+            return filterResults;
+        }
+
+        @Override
+        protected void publishResults(CharSequence constraint, FilterResults results) {
+            frutas.clear();
+            frutas.addAll((Collection<? extends Fruta>) results.values);
+            notifyDataSetChanged();
+        }
+    };
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
         TextView txt_nombre, txt_cantidad;

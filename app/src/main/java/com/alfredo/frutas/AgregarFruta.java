@@ -36,7 +36,7 @@ import com.theartofdev.edmodo.cropper.CropImageView;
 import java.util.ArrayList;
 
 public class AgregarFruta extends AppCompatActivity {
-    TextInputEditText edt_nombre, edt_color, edt_cantidad;
+    TextInputEditText edt_nombre, edt_cantidad;
     ImageView imageViewFruta;
     Spinner spinner_fruta;
 
@@ -103,24 +103,23 @@ public class AgregarFruta extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.guardarMenu:
-                if (edt_nombre.getText().length() > 0 && edt_color.getText().length() > 0 && edt_cantidad.getText().length() > 0 && edt_cantidad.getText().length() <8){
+                if (edt_nombre.getText().length() > 0 && edt_cantidad.getText().length() > 0 && edt_cantidad.getText().length() <8){
                     FrutaCon frutaCon = new FrutaCon(getApplicationContext());
                     frutaCon.open();
 
                     String nombre = edt_nombre.getText().toString();
-                    String color = edt_color.getText().toString();
                     Integer cantidad = Integer.parseInt(edt_cantidad.getText().toString());
 
                     if (imagenUri != null){
                         Fruta fruta = new Fruta(nombre, item_seleccionado, cantidad, imagenUri.getPath());
                         frutaCon.agregarFruta(fruta);
                         finish();
-                        //Toast.makeText(getApplicationContext(), "Registro exitoso", Toast.LENGTH_LONG).show();
+                        Toast.makeText(getApplicationContext(), "Registro exitoso", Toast.LENGTH_LONG).show();
                     } else {
                         Fruta fruta = new Fruta(nombre, item_seleccionado, cantidad);
                         frutaCon.agregarFruta(fruta);
                         finish();
-                        //Toast.makeText(getApplicationContext(), "Registro exitoso", Toast.LENGTH_LONG).show();
+                        Toast.makeText(getApplicationContext(), "Registro exitoso", Toast.LENGTH_LONG).show();
                         Toast.makeText(getApplicationContext(), "seleccionar un color: " + item_seleccionado, Toast.LENGTH_LONG).show();
                     }
                 }else{

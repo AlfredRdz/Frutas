@@ -28,7 +28,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class Listado extends AppCompatActivity implements SearchView.OnQueryTextListener {
+public class Listado extends AppCompatActivity  {
 
     FloatingActionButton btn_agregar;
     RecyclerView recyclerView;
@@ -45,7 +45,6 @@ public class Listado extends AppCompatActivity implements SearchView.OnQueryText
         btn_agregar = findViewById(R.id.btn_agregar);
         recyclerView = findViewById(R.id.recyclerView);
         imageView_vaciop = findViewById(R.id.imageView_vaciop);
-
 //        recyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
 //        recyclerView.setHasFixedSize(true);
 
@@ -92,36 +91,23 @@ public class Listado extends AppCompatActivity implements SearchView.OnQueryText
 
     public boolean onCreateOptionsMenu(Menu menu){
         getMenuInflater().inflate(R.menu.barra_busqueda, menu);
-        MenuItem item = menu.findItem(R.id.app_bar_search);
-        SearchView searchView = (SearchView) MenuItemCompat.getActionView(item);
-        searchView.setOnQueryTextListener(this);
-        return true;
-    }
+        MenuItem menuItem = menu.findItem(R.id.app_bar_search);
+        SearchView searchView = (SearchView) menuItem.getActionView();
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item){
-        return super.onOptionsItemSelected(item);
-    }
-
-    @Override
-    public boolean onQueryTextSubmit(String query) {
-        //customAdapter.getFilter().filter(query);
-        return false;
-    }
-
-    @Override
-    public boolean onQueryTextChange(String newText) {
-        newText = newText.toLowerCase();
-        ArrayList<Fruta> list = new ArrayList<>();
-        for (Fruta fruta: lista){
-            String nombre = fruta.getNombre().toLowerCase();
-            if (nombre.contains(newText)){
-                list.add(fruta);
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                return false;
             }
-        }
 
-        customAdapter.setFilter(list);
-        return true;
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                customAdapter.getFilter().filter(newText);
+                return false;
+            }
+        });
+        return super.onCreateOptionsMenu(menu);
     }
+
 
 }

@@ -32,16 +32,16 @@ public class MainActivity extends AppCompatActivity {
         btn_ingresar = findViewById(R.id.btn_ingresar);
         btn_registrarse = findViewById(R.id.btn_registrarse);
 
-        preferences = getSharedPreferences("preferences", MODE_PRIVATE);
+         preferences = getSharedPreferences("preferences", MODE_PRIVATE);
+        boolean estado = true;
         editor = preferences.edit();
+        editor.putBoolean("estado_usuario", estado);
+
+        String nombreu = preferences.getString("estado_usuario", "no existe");
 
 
-        String nombreu = preferences.getString("nombre", "no existe");
-        String pass = preferences.getString("contraseña", "no existe");
 
-
-
-        if (nombreu.length() > 0 && pass.length() > 0) {
+        if (nombreu.length() > 0 ) {
             Toast.makeText(getApplicationContext(), "sesion iniciada", Toast.LENGTH_LONG).show();
             startActivity(new Intent(this, Listado.class));
         } else {
@@ -85,5 +85,13 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
+    }
+
+    public void guardarEstado(){
+        SharedPreferences preferences = getSharedPreferences("preferences", MODE_PRIVATE);
+        boolean estado = true;
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putBoolean("estado_usuario", estado);
+        editor.commit();
     }
 }
