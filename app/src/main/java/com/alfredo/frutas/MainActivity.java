@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.alfredo.frutas.conexion.Usuario;
@@ -18,7 +19,8 @@ import com.google.android.material.textfield.TextInputEditText;
 public class MainActivity extends AppCompatActivity {
 
     TextInputEditText edt_usuario, edt_contraseña;
-    Button btn_ingresar, btn_registrarse;
+    TextView textView4;
+    Button btn_ingresar;
     SharedPreferences preferences;
     SharedPreferences.Editor editor;
 
@@ -30,30 +32,17 @@ public class MainActivity extends AppCompatActivity {
         edt_usuario = findViewById(R.id.edt_usuario);
         edt_contraseña = findViewById(R.id.edt_contraseña);
         btn_ingresar = findViewById(R.id.btn_ingresar);
-        btn_registrarse = findViewById(R.id.btn_registrarse);
+        textView4 = findViewById(R.id.textView4);
 
 
-        SharedPreferences sh = getSharedPreferences("preferences", MODE_PRIVATE);
-        String usuario = sh.getString("nombre", "");
-        String contraseña = sh.getString("contraseña", "");
-
-
-
-
-        if (usuario.length() > 0 && contraseña.length() > 0) {
-            Toast.makeText(getApplicationContext(), "sesion iniciada", Toast.LENGTH_LONG).show();
-            startActivity(new Intent(this, Listado.class));
-        } else {
-            Toast.makeText(getApplicationContext(), "inicia sesion", Toast.LENGTH_LONG).show();
-        }
-
-        btn_registrarse.setOnClickListener(new View.OnClickListener() {
+        textView4.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this, Registro.class);
-                startActivity(intent);
+                startActivity(new Intent(MainActivity.this, Registro.class));
+                //finish();
             }
         });
+
 
 
         btn_ingresar.setOnClickListener(new View.OnClickListener() {

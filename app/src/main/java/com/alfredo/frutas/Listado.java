@@ -105,7 +105,7 @@ public class Listado extends AppCompatActivity  {
 
             @Override
             public boolean onQueryTextChange(String newText) {
-                customAdapter.getFilter().filter(newText);
+                customAdapter.getFilter().filter(newText.toString());
                 return false;
             }
         });

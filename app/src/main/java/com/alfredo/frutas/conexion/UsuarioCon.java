@@ -20,12 +20,19 @@ public class UsuarioCon {
         db = dbHelper.getWritableDatabase();
     }
 
-    public void agregarUsuario(Usuario usuario){
-        ContentValues values = new ContentValues();
-        values.put("usuario", usuario.getUsuario());
-        values.put("contraseña", usuario.getContraseña());
-        db.insert("USUARIO", null, values);
+    public long agregarUsuario(Usuario usuario){
+        long id = 0;
 
+        try {
+            ContentValues values = new ContentValues();
+            values.put("usuario", usuario.getUsuario());
+            values.put("contraseña", usuario.getContraseña());
+            id = db.insert("USUARIO", null, values);
+        } catch (Exception e){
+            e.toString();
+        }
+
+        return id;
     }
 
     public boolean login(String nombre, String contraseña){
