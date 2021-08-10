@@ -46,9 +46,14 @@ public class Registro extends AppCompatActivity {
                         Usuario usuarioAgregar = new Usuario(usuario, contraseña);
 
 
-                        long id = usuarioCon.agregarUsuario(usuarioAgregar);
+                        //long id = usuarioCon.agregarUsuario(usuarioAgregar);
 
-                        if (id > 0){
+
+                        boolean comprobar = usuarioCon.login(usuario, contraseña);
+
+                        if (comprobar == false){
+                            usuarioCon.agregarUsuario(usuarioAgregar);
+
                             SharedPreferences preferences = getSharedPreferences("preferences", MODE_PRIVATE);
                             SharedPreferences.Editor editor = preferences.edit();
                             editor.putString("nombre" , usuario);

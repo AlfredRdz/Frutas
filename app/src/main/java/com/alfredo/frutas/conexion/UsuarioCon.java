@@ -4,6 +4,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,19 +21,27 @@ public class UsuarioCon {
         db = dbHelper.getWritableDatabase();
     }
 
-    public long agregarUsuario(Usuario usuario){
-        long id = 0;
+    public void agregarUsuario(Usuario usuario){
+        //long id = 0;
 
-        try {
-            ContentValues values = new ContentValues();
-            values.put("usuario", usuario.getUsuario());
-            values.put("contraseña", usuario.getContraseña());
-            id = db.insert("USUARIO", null, values);
-        } catch (Exception e){
-            e.toString();
-        }
+        ContentValues values = new ContentValues();
+        values.put("usuario", usuario.getUsuario());
+        values.put("contraseña", usuario.getContraseña());
+        db.insert("USUARIO", null, values);
 
-        return id;
+//        try {
+//
+//            boolean comprobar = login(usuario.getUsuario(), usuario.getContraseña());
+//
+//            if (comprobar == false) {
+//                id = db.insert("USUARIO", null, values);
+//            }
+//
+//        } catch (Exception e){
+//            e.toString();
+//        }
+
+        //return id;
     }
 
     public boolean login(String nombre, String contraseña){
