@@ -13,10 +13,13 @@ import android.content.ContentValues;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.provider.MediaStore;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -32,11 +35,16 @@ import android.widget.Toast;
 import com.alfredo.frutas.conexion.Fruta;
 import com.alfredo.frutas.conexion.FrutaCon;
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.target.CustomTarget;
+import com.bumptech.glide.request.transition.Transition;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 import com.theartofdev.edmodo.cropper.CropImage;
 import com.theartofdev.edmodo.cropper.CropImageView;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 
 public class AgregarFruta extends AppCompatActivity implements Dialogo.Custom_dialog{
@@ -59,6 +67,7 @@ public class AgregarFruta extends AppCompatActivity implements Dialogo.Custom_di
     String item_seleccionado;
 
 
+    //String fileUri;
     Uri imagenUri;
 
     @Override
@@ -183,15 +192,15 @@ public class AgregarFruta extends AppCompatActivity implements Dialogo.Custom_di
         Dialogo dialogo = new Dialogo();
         dialogo.show(getSupportFragmentManager(), "Ingresa la url");
 
-        ContentValues values = new ContentValues();
-        values.put(MediaStore.Images.Media.TITLE, "Titulo de la imagen");
-        values.put(MediaStore.Images.Media.DESCRIPTION, "Descripcion de la imagen");
-
-        imagenUri = getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
-
-        Intent intent = new Intent(Intent.ACTION_PICK);
-        intent.putExtra(MediaStore.EXTRA_OUTPUT, imagenUri);
-        startActivityForResult(intent, IMAGE_PICK_CAMERA_CODE);
+//        ContentValues values = new ContentValues();
+//        values.put(MediaStore.Images.Media.TITLE, "Titulo de la imagen");
+//        values.put(MediaStore.Images.Media.DESCRIPTION, "Descripcion de la imagen");
+//
+//        imagenUri = getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
+//
+//        Intent intent = new Intent(Intent.ACTION_PICK);
+//        intent.putExtra(MediaStore.EXTRA_OUTPUT, imagenUri);
+//        startActivityForResult(intent, IMAGE_PICK_CAMERA_CODE);
     }
 
     private void elegirdeGaleria() {
@@ -325,6 +334,33 @@ public class AgregarFruta extends AppCompatActivity implements Dialogo.Custom_di
                 .error(R.drawable.ic_datos)
                 .into(imageViewFruta);
 
+        SaveImage(image);
+    }
 
+    public void SaveImage(String url) {
+        Glide.with(this).asBitmap().load(url).into(new CustomTarget<Bitmap>() {
+            @Override
+            public void onResourceReady(Bitmap bitmap, Transition<? super Bitmap> transition) {
+                try {
+                    File mydir = new File(Environment.getExternalStorageDirectory() + "/pictures");
+                    if (!mydir.exists()) {
+                        mydir.mkdirs();
+                    }
+
+                    imagenUri = Uri.parse(mydir.getAbsolutePath() + File.separator + System.currentTimeMillis() + ".jpg");
+                    FileOutputStream outputStream = new FileOutputStream(String.valueOf(imagenUri));
+
+                    bitmap.compress(Bitmap.CompressFormat.JPEG, 100, outputStream);
+                    outputStream.flush();
+                    outputStream.close();
+                } catch(IOException e) {
+                    e.printStackTrace();
+                }
+                Toast.makeText(AgregarFruta.this, "Guardado", Toast.LENGTH_LONG).show();
+            }
+            @Override
+            public void onLoadCleared(Drawable placeholder) {
+            }
+        });
     }
 }
