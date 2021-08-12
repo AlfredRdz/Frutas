@@ -356,7 +356,7 @@ public class AgregarFruta extends AppCompatActivity implements Dialogo.Custom_di
                 } catch(IOException e) {
                     e.printStackTrace();
                 }
-                Toast.makeText(AgregarFruta.this, "Guardado", Toast.LENGTH_LONG).show();
+                //Toast.makeText(AgregarFruta.this, "Guardado", Toast.LENGTH_LONG).show();
             }
             @Override
             public void onLoadCleared(Drawable placeholder) {
