@@ -53,4 +53,14 @@ public class UsuarioCon {
             return false;
         }
     }
+
+    public boolean login(String nombre){
+        Cursor cursor = db.rawQuery("select usuario from USUARIO WHERE usuario = ? ", new String[] {nombre});
+
+        if (cursor.getCount() > 0){
+            return true;
+        }else {
+            return false;
+        }
+    }
 }

@@ -5,6 +5,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -18,7 +20,7 @@ import com.google.android.material.textfield.TextInputLayout;
 public class Registro extends AppCompatActivity {
 
     TextInputEditText edt_reusuario, edt_recontraseña, edt_repetircontraseña;
-    TextInputLayout textInputLayout6, textInputLayout7;
+    TextInputLayout textInputLayout6, textInputLayout7, textInputLayout3;
     Button btn_registrar;
 
     @Override
@@ -31,8 +33,83 @@ public class Registro extends AppCompatActivity {
         edt_repetircontraseña = findViewById(R.id.edt_repetircontraseña);
         btn_registrar = findViewById(R.id.btn_registrar);
 
+        textInputLayout3 = findViewById(R.id.textInputLayout3);
         textInputLayout6 = findViewById(R.id.textInputLayout6);
         textInputLayout7 = findViewById(R.id.textInputLayout7);
+
+
+        edt_reusuario.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if (s.length() < 21){
+                    textInputLayout3.setError(null);
+                } else {
+                    textInputLayout3.setError("Solo se permiten 20 caracteres");
+                }
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+
+        edt_recontraseña.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+                if (s.length() > 7){
+                    textInputLayout6.setError(null);
+                } else {
+                    textInputLayout6.setError("Deben ser minimo 8 caracteres");
+                    textInputLayout6.setEndIconMode(TextInputLayout.END_ICON_PASSWORD_TOGGLE);
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+
+        edt_repetircontraseña.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if (s.toString().equals(edt_recontraseña.getText().toString())){
+                    Toast.makeText(getApplicationContext(), "coincidn", Toast.LENGTH_SHORT).show();
+                    textInputLayout7.setError(null);
+                } else {
+                    Toast.makeText(getApplicationContext(), "no coiciden", Toast.LENGTH_SHORT).show();
+                    textInputLayout7.setError("No coiciden las contraseñas");
+                }
+//                if (s.length() > 7){
+//                    textInputLayout7.setError(null);
+//                } else {
+//                    textInputLayout7.setError("Deben ser minimo 8 caracteres");
+//                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
 
         btn_registrar.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -49,7 +126,7 @@ public class Registro extends AppCompatActivity {
                         //long id = usuarioCon.agregarUsuario(usuarioAgregar);
 
 
-                        boolean comprobar = usuarioCon.login(usuario, contraseña);
+                        boolean comprobar = usuarioCon.login(usuario);
 
                         if (comprobar == false){
                             usuarioCon.agregarUsuario(usuarioAgregar);
@@ -71,14 +148,14 @@ public class Registro extends AppCompatActivity {
 
                     }else {
                         Toast.makeText(getBaseContext(), "Las contraseñas no coinciden", Toast.LENGTH_LONG).show();
-                        textInputLayout6.setError("Las Contraseñas no coinciden");
-                        textInputLayout7.setError("Las Contraseñas no coinciden");
+//                        textInputLayout6.setError("Las Contraseñas no coinciden");
+//                        textInputLayout7.setError("Las Contraseñas no coinciden");
                     }
                 }else {
-                    Toast.makeText(getBaseContext(), "Debes llenar todos los campos", Toast.LENGTH_LONG).show();
+                    //Toast.makeText(getBaseContext(), "Debes llenar todos los campos", Toast.LENGTH_LONG).show();
                     //edt_recontraseña.setError("Fallo");
-                    textInputLayout6.setError("fallo");
-                    textInputLayout7.setError("fallo");
+//                    textInputLayout6.setError("Deben ser minimo 8 caracteres");
+//                    textInputLayout7.setError("Deben ser minimo 8 caracteres");
                 }
             }
         });

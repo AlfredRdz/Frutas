@@ -8,10 +8,13 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 import android.Manifest;
+import android.app.Dialog;
 import android.content.ContentValues;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -28,6 +31,7 @@ import android.widget.Toast;
 
 import com.alfredo.frutas.conexion.Fruta;
 import com.alfredo.frutas.conexion.FrutaCon;
+import com.bumptech.glide.Glide;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 import com.theartofdev.edmodo.cropper.CropImage;
@@ -35,7 +39,7 @@ import com.theartofdev.edmodo.cropper.CropImageView;
 
 import java.util.ArrayList;
 
-public class AgregarFruta extends AppCompatActivity {
+public class AgregarFruta extends AppCompatActivity implements Dialogo.Custom_dialog{
     TextInputEditText edt_nombre, edt_cantidad;
     ImageView imageViewFruta;
     Spinner spinner_fruta;
@@ -46,6 +50,8 @@ public class AgregarFruta extends AppCompatActivity {
     private static final int STORAGE_REQUEST_CODE = 101;
     private static final int IMAGE_PICK_CAMERA_CODE = 102;
     private static final int IMAGE_PICK_GALLERY_CODE = 103;
+    private static final int URL_REQUEST_CODE = 104;
+    private static final int IMAGE_PICK_URL_CODE = 105;
 
 
     String [] permisoCamara;
@@ -138,7 +144,7 @@ public class AgregarFruta extends AppCompatActivity {
 
     private void SeleccionarImagen() {
         //mostrar dialog
-        String [] opciones = {"Tomar Foto", "Galeria"};
+        String [] opciones = {"Tomar Foto", "Galeria", "Url"};
 
         AlertDialog.Builder dialog = new AlertDialog.Builder(this);
 
@@ -158,11 +164,34 @@ public class AgregarFruta extends AppCompatActivity {
                     } else {
                         elegirdeGaleria();
                     }
+                } else if (which == 2){
+//                    AlertDialog.Builder builder = new AlertDialog.Builder(AgregarFruta.this);
+//                    builder.setTitle("url");
+//                    builder.setMessage("Ingresa la url");
+//                    builder.create().show();
+
+                    openDialog();
                 }
             }
         });
 
         dialog.create().show();
+    }
+
+    private void openDialog() {
+
+        Dialogo dialogo = new Dialogo();
+        dialogo.show(getSupportFragmentManager(), "Ingresa la url");
+
+        ContentValues values = new ContentValues();
+        values.put(MediaStore.Images.Media.TITLE, "Titulo de la imagen");
+        values.put(MediaStore.Images.Media.DESCRIPTION, "Descripcion de la imagen");
+
+        imagenUri = getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
+
+        Intent intent = new Intent(Intent.ACTION_PICK);
+        intent.putExtra(MediaStore.EXTRA_OUTPUT, imagenUri);
+        startActivityForResult(intent, IMAGE_PICK_CAMERA_CODE);
     }
 
     private void elegirdeGaleria() {
@@ -234,6 +263,17 @@ public class AgregarFruta extends AppCompatActivity {
                 }
             }
             break;
+            case URL_REQUEST_CODE: {
+                if (grantResults.length > 0){
+                    boolean almacenamientoAceptado = grantResults[0] == PackageManager.PERMISSION_GRANTED;
+                    if (almacenamientoAceptado) {
+                        openDialog();
+                    } else {
+                        Toast.makeText(this, "Se requieren los permisos de almacenamiento", Toast.LENGTH_LONG);
+                    }
+                }
+            }
+            break;
         }
     }
 
@@ -257,7 +297,9 @@ public class AgregarFruta extends AppCompatActivity {
                         .setGuidelines(CropImageView.Guidelines.ON)
                         .setAspectRatio(1, 1)
                         .start(this);
-            }else if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE){
+            } else if (requestCode == IMAGE_PICK_URL_CODE){
+                Toast.makeText(AgregarFruta.this, "entra en la IMAGE_PICK_URL_CODE", Toast.LENGTH_LONG).show();
+            } else if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE){
                 //crop imagen recibida
                 CropImage.ActivityResult result = CropImage.getActivityResult(data);
                 if (resultCode == RESULT_OK){
@@ -273,5 +315,16 @@ public class AgregarFruta extends AppCompatActivity {
                 }
             }
         }
+    }
+
+    @Override
+    public void aplicarImagen(String image) {
+        Glide.with(AgregarFruta.this)
+                .load(image)
+                .placeholder(R.drawable.ic_launcher_background)
+                .error(R.drawable.ic_datos)
+                .into(imageViewFruta);
+
+
     }
 }
