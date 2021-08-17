@@ -95,7 +95,7 @@ public class AgregarFruta extends AppCompatActivity implements Dialogo.Custom_di
 
         if (getIntent().hasExtra("lista")){
             lista = (ArrayList<Chips>) getIntent().getSerializableExtra("lista");
-            Toast.makeText(AgregarFruta.this, lista.toString(), Toast.LENGTH_SHORT).show();
+            //Toast.makeText(AgregarFruta.this, lista.toString(), Toast.LENGTH_SHORT).show();
 
             chips = lista.toArray(new String[lista.size()]);
             for(String genre : chips) {
@@ -119,7 +119,7 @@ public class AgregarFruta extends AppCompatActivity implements Dialogo.Custom_di
                 str.append(chips[i]+"|");
             }
             resultado = str.toString();
-            Toast.makeText(AgregarFruta.this, resultado, Toast.LENGTH_SHORT).show();
+            //Toast.makeText(AgregarFruta.this, resultado, Toast.LENGTH_SHORT).show();
         }
 
 //        String[] genres = {"Thriller", "Comedy", "Adventure"};

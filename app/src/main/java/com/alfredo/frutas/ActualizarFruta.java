@@ -53,6 +53,7 @@ public class ActualizarFruta extends AppCompatActivity implements Dialogo.Custom
     Spinner spinner_agregar;
     ChipGroup chipGroupA;
 
+
     ArrayAdapter<CharSequence> adapter;
 
     private static final int CAMERA_REQUEST_CODE = 100;
@@ -67,8 +68,9 @@ public class ActualizarFruta extends AppCompatActivity implements Dialogo.Custom
     String [] permisoAlmacenamiento;
     String item_seleccionado;
 
-    ArrayList<Chips> lista;
+    ArrayList<String> lista;
     String [] chips;
+    String resultado;
 
     Uri imagenUri;
 
@@ -137,13 +139,13 @@ public class ActualizarFruta extends AppCompatActivity implements Dialogo.Custom
                     String beneficios = edt_beneficiosAC.getText().toString();
 
                     if (!imagenUri.toString().equals("null")){
-                        Fruta fruta = new Fruta(Integer.valueOf(id), nombre, item_seleccionado, cantidad, imagenUri.getPath(), descripcion, beneficios);
+                        Fruta fruta = new Fruta(Integer.valueOf(id), nombre, item_seleccionado, cantidad, imagenUri.getPath(), descripcion, beneficios, resultado);
                         frutaCon.actualizarFruta(fruta);
 
                         Toast.makeText(ActualizarFruta.this, "Se ha actualizado la fruta", Toast.LENGTH_LONG).show();
                         finish();
                     } else {
-                        Fruta fruta = new Fruta(Integer.valueOf(id), nombre, item_seleccionado, cantidad, null, descripcion, beneficios);
+                        Fruta fruta = new Fruta(Integer.valueOf(id), nombre, item_seleccionado, cantidad, null, descripcion, beneficios, resultado);
                         frutaCon.actualizarFruta(fruta);
 
                         Toast.makeText(ActualizarFruta.this, "Se ha actualizado la fruta", Toast.LENGTH_LONG).show();
@@ -338,10 +340,12 @@ public class ActualizarFruta extends AppCompatActivity implements Dialogo.Custom
             edt_descripcionAC.setText(descripcion);
             edt_beneficiosAC.setText(beneficios);
 
+            //Toast.makeText(ActualizarFruta.this, vitaminas, Toast.LENGTH_SHORT).show();
 
-            String[] list = vitaminas.split("|");
-            chips = list;
-            for(String genre : chips) {
+            String[] array = vitaminas.split("\\|");
+
+
+            for(String genre : array) {
                 Chip chip = (Chip) getLayoutInflater().inflate(R.layout.chip_item, null, false);
                 chip.setText(genre);
 
@@ -353,9 +357,18 @@ public class ActualizarFruta extends AppCompatActivity implements Dialogo.Custom
                 });
 
                 chipGroupA.addView(chip);
+
+//                StringBuilder str = new StringBuilder();
+//                str.append(genre+"|");
+//                resultado = str.toString();
             }
-            Toast.makeText(ActualizarFruta.this, chips[2].toString(), Toast.LENGTH_SHORT).show();
-            //lista = (ArrayList<Chips>) getIntent().getSerializableExtra("lista");
+            StringBuilder str = new StringBuilder();
+            for(int i=0;i<array.length;i++){
+                str.append(array[i]+"|");
+            }
+            resultado = str.toString();
+
+            //Toast.makeText(ActualizarFruta.this, array[2], Toast.LENGTH_SHORT).show();
 
             adapter = new ArrayAdapter<>(getApplicationContext(), android.R.layout.simple_list_item_1, getResources().getStringArray(R.array.spinner));
             spinner_agregar.setAdapter(adapter);
