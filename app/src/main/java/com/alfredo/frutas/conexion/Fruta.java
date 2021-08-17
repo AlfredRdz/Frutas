@@ -6,33 +6,48 @@ public class Fruta {
     private String color;
     private Integer cantidad;
     private String imagen;
+    private String descripcion;
+    private String beneficios;
+    private String vitaminas;
 
-    public Fruta(Integer id_fruta, String nombre, String color, Integer cantidad, String imagen) {
+    public Fruta(Integer id_fruta, String nombre, String color, Integer cantidad, String imagen, String descripcion, String beneficios, String vitaminas) {
         this.id_fruta = id_fruta;
         this.nombre = nombre;
         this.color = color;
         this.cantidad = cantidad;
         this.imagen = imagen;
+        this.descripcion = descripcion;
+        this.beneficios = beneficios;
+        this.vitaminas = vitaminas;
     }
 
-    public Fruta(Integer id_fruta, String nombre, String color, Integer cantidad) {
+    public Fruta(Integer id_fruta, String nombre, String color, Integer cantidad, String descripcion, String beneficios, String vitaminas) {
         this.id_fruta = id_fruta;
         this.nombre = nombre;
         this.color = color;
         this.cantidad = cantidad;
+        this.descripcion = descripcion;
+        this.beneficios = beneficios;
+        this.vitaminas = vitaminas;
     }
 
-    public Fruta(String nombre, String color, Integer cantidad, String imagen) {
+    public Fruta(String nombre, String color, Integer cantidad, String imagen, String descripcion, String beneficios, String vitaminas) {
         this.nombre = nombre;
         this.color = color;
         this.cantidad = cantidad;
         this.imagen = imagen;
+        this.descripcion = descripcion;
+        this.beneficios = beneficios;
+        this.vitaminas = vitaminas;
     }
 
-    public Fruta(String nombre, String color, Integer cantidad) {
+    public Fruta(String nombre, String color, Integer cantidad, String descripcion, String beneficios, String vitaminas) {
         this.nombre = nombre;
         this.color = color;
         this.cantidad = cantidad;
+        this.descripcion = descripcion;
+        this.beneficios = beneficios;
+        this.vitaminas = vitaminas;
     }
 
     public Integer getId_fruta() {
@@ -73,5 +88,29 @@ public class Fruta {
 
     public void setImagen(String imagen) {
         this.imagen = imagen;
+    }
+
+    public String getDescripcion() {
+        return descripcion;
+    }
+
+    public void setDescripcion(String descripcion) {
+        this.descripcion = descripcion;
+    }
+
+    public String getBeneficios() {
+        return beneficios;
+    }
+
+    public void setBeneficios(String beneficios) {
+        this.beneficios = beneficios;
+    }
+
+    public String getVitaminas() {
+        return vitaminas;
+    }
+
+    public void setVitaminas(String vitaminas) {
+        this.vitaminas = vitaminas;
     }
 }

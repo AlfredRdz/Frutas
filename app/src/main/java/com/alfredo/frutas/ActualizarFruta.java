@@ -12,8 +12,11 @@ import android.content.ContentValues;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.provider.MediaStore;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -28,16 +31,27 @@ import android.widget.Toast;
 
 import com.alfredo.frutas.conexion.Fruta;
 import com.alfredo.frutas.conexion.FrutaCon;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.target.CustomTarget;
+import com.bumptech.glide.request.transition.Transition;
+import com.google.android.material.chip.Chip;
+import com.google.android.material.chip.ChipGroup;
 import com.google.android.material.textfield.TextInputEditText;
 import com.theartofdev.edmodo.cropper.CropImage;
 import com.theartofdev.edmodo.cropper.CropImageView;
 
-public class ActualizarFruta extends AppCompatActivity {
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.util.ArrayList;
 
-    TextInputEditText edt_nombreAC, edt_cantidadAC;
+public class ActualizarFruta extends AppCompatActivity implements Dialogo.Custom_dialog {
+
+    TextInputEditText edt_nombreAC, edt_cantidadAC, edt_descripcionAC, edt_beneficiosAC;
     ImageView imageView2;
-    String id, nombre, color, cantidad, imagen;
+    String id, nombre, color, cantidad, imagen, beneficios, descripcion, vitaminas;
     Spinner spinner_agregar;
+    ChipGroup chipGroupA;
 
     ArrayAdapter<CharSequence> adapter;
 
@@ -45,12 +59,16 @@ public class ActualizarFruta extends AppCompatActivity {
     private static final int STORAGE_REQUEST_CODE = 101;
     private static final int IMAGE_PICK_CAMERA_CODE = 102;
     private static final int IMAGE_PICK_GALLERY_CODE = 103;
+    private static final int URL_REQUEST_CODE = 104;
+    private static final int IMAGE_PICK_URL_CODE = 105;
 
 
     String [] permisoCamara;
     String [] permisoAlmacenamiento;
     String item_seleccionado;
 
+    ArrayList<Chips> lista;
+    String [] chips;
 
     Uri imagenUri;
 
@@ -61,8 +79,11 @@ public class ActualizarFruta extends AppCompatActivity {
 
         edt_nombreAC = findViewById(R.id.edt_nombreAC);
         edt_cantidadAC = findViewById(R.id.edt_cantidadAC);
+        edt_descripcionAC = findViewById(R.id.edt_descripcionAC);
+        edt_beneficiosAC = findViewById(R.id.edt_beneficiosAC);
         imageView2 = findViewById(R.id.imageView2);
         spinner_agregar = findViewById(R.id.spinner_agregar);
+        chipGroupA = findViewById(R.id.chipGroupA);
 
         adapter = new ArrayAdapter<>(getApplicationContext(), android.R.layout.simple_list_item_1, getResources().getStringArray(R.array.spinner));
         spinner_agregar.setAdapter(adapter);
@@ -79,6 +100,8 @@ public class ActualizarFruta extends AppCompatActivity {
 
             }
         });
+
+
 
 
         permisoCamara = new String[]{Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE};
@@ -110,15 +133,17 @@ public class ActualizarFruta extends AppCompatActivity {
 
                     String nombre = edt_nombreAC.getText().toString();
                     Integer cantidad = Integer.parseInt(edt_cantidadAC.getText().toString());
+                    String descripcion = edt_descripcionAC.getText().toString();
+                    String beneficios = edt_beneficiosAC.getText().toString();
 
                     if (!imagenUri.toString().equals("null")){
-                        Fruta fruta = new Fruta(Integer.valueOf(id), nombre, item_seleccionado, cantidad, imagenUri.getPath());
+                        Fruta fruta = new Fruta(Integer.valueOf(id), nombre, item_seleccionado, cantidad, imagenUri.getPath(), descripcion, beneficios);
                         frutaCon.actualizarFruta(fruta);
 
                         Toast.makeText(ActualizarFruta.this, "Se ha actualizado la fruta", Toast.LENGTH_LONG).show();
                         finish();
                     } else {
-                        Fruta fruta = new Fruta(Integer.valueOf(id), nombre, item_seleccionado, cantidad, null);
+                        Fruta fruta = new Fruta(Integer.valueOf(id), nombre, item_seleccionado, cantidad, null, descripcion, beneficios);
                         frutaCon.actualizarFruta(fruta);
 
                         Toast.makeText(ActualizarFruta.this, "Se ha actualizado la fruta", Toast.LENGTH_LONG).show();
@@ -140,7 +165,7 @@ public class ActualizarFruta extends AppCompatActivity {
 
     private void seleccionarImagen() {
         //mostrar dialog
-        String [] opciones = {"Tomar Foto", "Galeria"};
+        String [] opciones = {"Tomar Foto", "Galeria", "Url"};
 
         AlertDialog.Builder dialog = new AlertDialog.Builder(this);
 
@@ -160,11 +185,22 @@ public class ActualizarFruta extends AppCompatActivity {
                     } else {
                         elegirdeGaleria();
                     }
+                } else if (which == 2){
+                    if (!checarPermisoAlmacenamiento()){
+                        solicitarPermisoAlmacenamiento();
+                    } else {
+                        abrirDialogo();
+                    }
                 }
             }
         });
 
         dialog.create().show();
+    }
+
+    private void abrirDialogo() {
+        Dialogo dialogo = new Dialogo();
+        dialogo.show(getSupportFragmentManager(), "Ingresa la url");
     }
 
     private void elegirdeGaleria() {
@@ -220,7 +256,7 @@ public class ActualizarFruta extends AppCompatActivity {
                     if (camaraAceptada && almacenamientoAceptado){
                         elegirdeCamara();
                     }else {
-                        Toast.makeText(this, "Se requieren los permisos de camara y almacenamiento", Toast.LENGTH_LONG);
+                        Toast.makeText(this, "Se requieren los permisos de camara y almacenamiento", Toast.LENGTH_LONG).show();
                     }
                 }
                 break;
@@ -230,10 +266,21 @@ public class ActualizarFruta extends AppCompatActivity {
                     if (almacenamientoAceptado){
                         elegirdeGaleria();
                     } else{
-                        Toast.makeText(this, "Se requieren los permisos de almacenamiento", Toast.LENGTH_LONG);
+                        Toast.makeText(this, "Se requieren los permisos de almacenamiento", Toast.LENGTH_LONG).show();
                     }
                 }
                 break;
+            case URL_REQUEST_CODE: {
+                if (grantResults.length > 0){
+                    boolean almacenamientoAceptado = grantResults[0] == PackageManager.PERMISSION_GRANTED;
+                    if (almacenamientoAceptado) {
+                        abrirDialogo();
+                    } else {
+                        Toast.makeText(this, "Se requieren los permisos de almacenamiento", Toast.LENGTH_LONG).show();
+                    }
+                }
+            }
+            break;
         }
     }
 
@@ -282,9 +329,33 @@ public class ActualizarFruta extends AppCompatActivity {
             color = getIntent().getStringExtra("color");
             cantidad = getIntent().getStringExtra("cantidad");
             imagenUri = Uri.parse(getIntent().getStringExtra("imagen"));
+            descripcion = getIntent().getStringExtra("descripcion");
+            beneficios = getIntent().getStringExtra("beneficios");
+            vitaminas = getIntent().getStringExtra("vitaminas");
 
             edt_nombreAC.setText(nombre);
             edt_cantidadAC.setText(cantidad);
+            edt_descripcionAC.setText(descripcion);
+            edt_beneficiosAC.setText(beneficios);
+
+
+            String[] list = vitaminas.split("|");
+            chips = list;
+            for(String genre : chips) {
+                Chip chip = (Chip) getLayoutInflater().inflate(R.layout.chip_item, null, false);
+                chip.setText(genre);
+
+                chip.setOnCloseIconClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        chipGroupA.removeView(v);
+                    }
+                });
+
+                chipGroupA.addView(chip);
+            }
+            Toast.makeText(ActualizarFruta.this, chips[2].toString(), Toast.LENGTH_SHORT).show();
+            //lista = (ArrayList<Chips>) getIntent().getSerializableExtra("lista");
 
             adapter = new ArrayAdapter<>(getApplicationContext(), android.R.layout.simple_list_item_1, getResources().getStringArray(R.array.spinner));
             spinner_agregar.setAdapter(adapter);
@@ -301,5 +372,43 @@ public class ActualizarFruta extends AppCompatActivity {
             }
 
         }
+    }
+
+    @Override
+    public void aplicarImagen(String image) {
+        Glide.with(ActualizarFruta.this)
+                .load(image)
+                .placeholder(R.drawable.ic_launcher_background)
+                .error(R.drawable.ic_datos)
+                .into(imageView2);
+
+        GuardarImagen(image);
+    }
+
+    public void GuardarImagen(String url) {
+        Glide.with(this).asBitmap().load(url).into(new CustomTarget<Bitmap>() {
+            @Override
+            public void onResourceReady(Bitmap bitmap, Transition<? super Bitmap> transition) {
+                try {
+                    File mydir = new File(Environment.getExternalStorageDirectory() + "/pictures");
+                    if (!mydir.exists()) {
+                        mydir.mkdirs();
+                    }
+
+                    imagenUri = Uri.parse(mydir.getAbsolutePath() + File.separator + System.currentTimeMillis() + ".jpg");
+                    FileOutputStream outputStream = new FileOutputStream(String.valueOf(imagenUri));
+
+                    bitmap.compress(Bitmap.CompressFormat.JPEG, 100, outputStream);
+                    outputStream.flush();
+                    outputStream.close();
+                } catch(IOException e) {
+                    e.printStackTrace();
+                }
+                //Toast.makeText(AgregarFruta.this, "Guardado", Toast.LENGTH_LONG).show();
+            }
+            @Override
+            public void onLoadCleared(Drawable placeholder) {
+            }
+        });
     }
 }

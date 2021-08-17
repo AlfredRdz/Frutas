@@ -26,6 +26,9 @@ public class FrutaCon {
         values.put("color", fruta.getColor());
         values.put("cantidad", fruta.getCantidad());
         values.put("imagen", fruta.getImagen());
+        values.put("descripcion", fruta.getDescripcion());
+        values.put("beneficios", fruta.getBeneficios());
+        values.put("vitaminas", fruta.getVitaminas());
         db.insert("FRUTAS", null, values);
     }
 
@@ -40,7 +43,10 @@ public class FrutaCon {
             String color = cursor.getString(2);
             Integer cantidad = cursor.getInt(3);
             String imagen = cursor.getString(4);
-            Fruta fruta = new Fruta(id_fruta, nombre, color, cantidad, imagen);
+            String descripcion = cursor.getString(5);
+            String beneficios = cursor.getString(6);
+            String vitaminas = cursor.getString(7);
+            Fruta fruta = new Fruta(id_fruta, nombre, color, cantidad, imagen, descripcion, beneficios, vitaminas);
             lista.add(fruta);
             cursor.moveToNext();
         }
@@ -54,6 +60,9 @@ public class FrutaCon {
         values.put("color", fruta.getColor());
         values.put("cantidad", fruta.getCantidad());
         values.put("imagen", fruta.getImagen());
+        values.put("descripcion", fruta.getDescripcion());
+        values.put("beneficios", fruta.getBeneficios());
+        values.put("vitaminas", fruta.getVitaminas());
         db.update("FRUTAS", values,  " id_fruta = ?", new String[] {String.valueOf(fruta.getId_fruta())});
     }
 

@@ -8,6 +8,8 @@ import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
@@ -48,12 +50,20 @@ public class Dialogo extends AppCompatDialogFragment {
 
         ImageView imageViewD = view.findViewById(R.id.imageViewD);
         edt_urlD = view.findViewById(R.id.edt_urlD);
-        Button btn_dialogo = view.findViewById(R.id.btn_dialogo);
 
-        btn_dialogo.setOnClickListener(new View.OnClickListener() {
+        edt_urlD.addTextChangedListener(new TextWatcher() {
             @Override
-            public void onClick(View v) {
-                //String url = "https://coca-colafemsa.com/wp-content/uploads/2019/11/1.png";
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
                 Glide.with(Dialogo.this)
                         .load(edt_urlD.getText().toString())
                         .placeholder(R.drawable.ic_launcher_background)
@@ -61,6 +71,7 @@ public class Dialogo extends AppCompatDialogFragment {
                         .into(imageViewD);
             }
         });
+
 
         builder.setPositiveButton("Seleccionar", new DialogInterface.OnClickListener() {
             @Override

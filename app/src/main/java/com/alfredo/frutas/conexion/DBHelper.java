@@ -7,7 +7,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 public class DBHelper extends SQLiteOpenHelper {
 
     public static final String BASEDEDATOS =  "frutas";
-    public static final int VERSION = 1;
+    public static final int VERSION = 3;
 
     public DBHelper(Context context){
         super(context, BASEDEDATOS, null, VERSION);
@@ -24,7 +24,7 @@ public class DBHelper extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
         db.execSQL("CREATE TABLE USUARIO (id_usuario INTEGER PRIMARY KEY AUTOINCREMENT, usuario TEXT UNIQUE, contraseña TEXT);");
-        db.execSQL("CREATE TABLE FRUTAS ( id_fruta INTEGER PRIMARY KEY AUTOINCREMENT, nombre TEXT, color TEXT, cantidad TEXT, imagen TEXT DEFAULT 'null')");
+        db.execSQL("CREATE TABLE FRUTAS ( id_fruta INTEGER PRIMARY KEY AUTOINCREMENT, nombre TEXT, color TEXT, cantidad TEXT, imagen TEXT DEFAULT 'null', descripcion TEXT, beneficios TEXT, vitaminas TEXT)");
     }
 
     @Override

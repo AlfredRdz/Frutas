@@ -1,5 +1,6 @@
 package com.alfredo.frutas;
 
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -54,7 +55,7 @@ public class FrutaAdapter extends RecyclerView.Adapter<FrutaAdapter.MyViewHolder
     }
 
     @Override
-    public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull MyViewHolder holder, @SuppressLint("RecyclerView") int position) {
         final Fruta fruta = frutas.get(position);
         holder.txt_nombre.setText(fruta.getNombre());
         holder.txt_cantidad.setText(Integer.toString(fruta.getCantidad()));
@@ -109,6 +110,9 @@ public class FrutaAdapter extends RecyclerView.Adapter<FrutaAdapter.MyViewHolder
                 intent.putExtra("color", String.valueOf(fruta.getColor()));
                 intent.putExtra("cantidad", String.valueOf(fruta.getCantidad()));
                 intent.putExtra("imagen", String.valueOf(fruta.getImagen()));
+                intent.putExtra("descripcion", String.valueOf(fruta.getDescripcion()));
+                intent.putExtra("beneficios", String.valueOf(fruta.getBeneficios()));
+                intent.putExtra("vitaminas", String.valueOf(fruta.getVitaminas()));
                 context.startActivity(intent);
             }
         });
