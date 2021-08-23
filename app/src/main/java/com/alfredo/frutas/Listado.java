@@ -134,6 +134,7 @@ public class Listado extends AppCompatActivity  {
 
     @Override
     public void onBackPressed() {
+        super.onBackPressed();
         finish();
     }
 }

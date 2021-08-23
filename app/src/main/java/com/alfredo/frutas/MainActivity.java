@@ -14,32 +14,30 @@ import android.widget.Toast;
 
 import com.alfredo.frutas.conexion.Usuario;
 import com.alfredo.frutas.conexion.UsuarioCon;
-import com.alfredo.frutas.databinding.ActivityMainBinding;
 import com.google.android.material.textfield.TextInputEditText;
 
 public class MainActivity extends AppCompatActivity {
 
-    private ActivityMainBinding binding;
 
-    //TextInputEditText edt_usuario, edt_contraseña;
-    //TextView textView4;
-    //Button btn_ingresar;
+
+    TextInputEditText edt_usuario, edt_contraseña;
+    TextView textView4;
+    Button btn_ingresar;
     SharedPreferences preferences;
     SharedPreferences.Editor editor;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        binding = ActivityMainBinding.inflate(getLayoutInflater());
-        setContentView(binding.getRoot());
+        setContentView(R.layout.activity_main);
 
-        //edt_usuario = findViewById(R.id.edt_usuario);
-        //edt_contraseña = findViewById(R.id.edt_contraseña);
-        //btn_ingresar = findViewById(R.id.btn_ingresar);
-        //textView4 = findViewById(R.id.textView4);
+        edt_usuario = findViewById(R.id.edt_usuario);
+        edt_contraseña = findViewById(R.id.edt_contraseña);
+        btn_ingresar = findViewById(R.id.btn_ingresar);
+        textView4 = findViewById(R.id.textView4);
 
 
-        binding.textView4.setOnClickListener(new View.OnClickListener() {
+        textView4.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(MainActivity.this, Registro.class));
@@ -49,15 +47,15 @@ public class MainActivity extends AppCompatActivity {
 
 
 
-        binding.btnIngresar.setOnClickListener(new View.OnClickListener() {
+        btn_ingresar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (binding.edtUsuario.getText().length() > 0 && binding.edtContraseA.getText().length() > 0){
+                if (edt_usuario.getText().length() > 0 && edt_contraseña.getText().length() > 0){
                     UsuarioCon usuarioCon = new UsuarioCon(getApplicationContext());
                     usuarioCon.open();
 
-                    String nombre = binding.edtUsuario.getText().toString();
-                    String contraseña = binding.edtContraseA.getText().toString();
+                    String nombre = edt_usuario.getText().toString();
+                    String contraseña = edt_contraseña.getText().toString();
 
                     boolean comprobar = usuarioCon.login(nombre, contraseña);
 
@@ -68,6 +66,7 @@ public class MainActivity extends AppCompatActivity {
                         editor.putString("contraseña", contraseña);
                         editor.commit();
 
+                        finish();
                         Intent intent = new Intent(MainActivity.this, Listado.class);
                         startActivity(intent);
                     }else{

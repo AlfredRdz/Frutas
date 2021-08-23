@@ -14,10 +14,13 @@ import android.widget.Toast;
 
 import com.alfredo.frutas.conexion.Usuario;
 import com.alfredo.frutas.conexion.UsuarioCon;
+import com.alfredo.frutas.databinding.ActivityRegistroBinding;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 
 public class Registro extends AppCompatActivity {
+
+    private ActivityRegistroBinding binding;
 
     TextInputEditText edt_reusuario, edt_recontraseña, edt_repetircontraseña;
     TextInputLayout textInputLayout6, textInputLayout7, textInputLayout3;
