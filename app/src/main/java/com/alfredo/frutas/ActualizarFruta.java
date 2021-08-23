@@ -346,12 +346,12 @@ public class ActualizarFruta extends AppCompatActivity implements Dialogo.Custom
                 Chip chip = (Chip) getLayoutInflater().inflate(R.layout.chip_item, null, false);
                 chip.setText(genre);
 
-                chip.setOnCloseIconClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        chipGroupA.removeView(v);
-                    }
-                });
+//                chip.setOnCloseIconClickListener(new View.OnClickListener() {
+//                    @Override
+//                    public void onClick(View v) {
+//                        chipGroupA.removeView(v);
+//                    }
+//                });
 
                 chipGroupA.addView(chip);
 
