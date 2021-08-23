@@ -35,42 +35,42 @@
             style="@style/Widget.MaterialComponents.Chip.Filter"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Vitamina A"/>
+            android:text="Vitamina A" />
 
         <com.google.android.material.chip.Chip
             android:id="@+id/chipC"
             style="@style/Widget.MaterialComponents.Chip.Filter"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Vitamina C"/>
+            android:text="Vitamina C" />
 
         <com.google.android.material.chip.Chip
             android:id="@+id/chipD"
             style="@style/Widget.MaterialComponents.Chip.Filter"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Vitamina D"/>
+            android:text="Vitamina D" />
 
         <com.google.android.material.chip.Chip
             android:id="@+id/chipE"
             style="@style/Widget.MaterialComponents.Chip.Filter"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Vitamina E"/>
+            android:text="Vitamina E" />
 
         <com.google.android.material.chip.Chip
             android:id="@+id/chipK"
             style="@style/Widget.MaterialComponents.Chip.Filter"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Vitamina K"/>
+            android:text="Vitamina K" />
 
         <com.google.android.material.chip.Chip
             android:id="@+id/chipB1"
             style="@style/Widget.MaterialComponents.Chip.Filter"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Vitamina B1"/>
+            android:text="Vitamina B1" />
     </com.google.android.material.chip.ChipGroup>
 
     <Button

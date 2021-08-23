@@ -58,6 +58,7 @@ public class Chips extends AppCompatActivity implements Serializable {
                 Intent intent = new Intent(Chips.this, AgregarFruta.class);
                 intent.putExtra("lista", (Serializable) lista);
                 startActivity(intent);
+
                 //Toast.makeText(Chips.this, lista.toString(), Toast.LENGTH_SHORT).show();
             }
         });

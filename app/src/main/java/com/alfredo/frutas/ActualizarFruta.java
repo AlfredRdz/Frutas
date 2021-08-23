@@ -23,8 +23,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.Toast;
@@ -87,6 +85,7 @@ public class ActualizarFruta extends AppCompatActivity implements Dialogo.Custom
         spinner_agregar = findViewById(R.id.spinner_agregar);
         chipGroupA = findViewById(R.id.chipGroupA);
 
+
         adapter = new ArrayAdapter<>(getApplicationContext(), android.R.layout.simple_list_item_1, getResources().getStringArray(R.array.spinner));
         spinner_agregar.setAdapter(adapter);
 
@@ -102,8 +101,6 @@ public class ActualizarFruta extends AppCompatActivity implements Dialogo.Custom
 
             }
         });
-
-
 
 
         permisoCamara = new String[]{Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE};
@@ -358,15 +355,15 @@ public class ActualizarFruta extends AppCompatActivity implements Dialogo.Custom
 
                 chipGroupA.addView(chip);
 
-//                StringBuilder str = new StringBuilder();
-//                str.append(genre+"|");
-//                resultado = str.toString();
+                StringBuilder str = new StringBuilder();
+                str.append(genre+"|");
+                resultado = str.toString();
             }
-            StringBuilder str = new StringBuilder();
-            for(int i=0;i<array.length;i++){
-                str.append(array[i]+"|");
-            }
-            resultado = str.toString();
+//            StringBuilder str = new StringBuilder();
+//            for(int i=0;i<array.length;i++){
+//                str.append(array[i]+"|");
+//            }
+//            resultado = str.toString();
 
             //Toast.makeText(ActualizarFruta.this, array[2], Toast.LENGTH_SHORT).show();
 
