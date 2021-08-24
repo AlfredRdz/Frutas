@@ -122,6 +122,7 @@ public class Listado extends AppCompatActivity  {
                 editor.putString("nombre", "");     //RESET TO DEFAULT VALUE
                 editor.putString("contraseña", "");     //RESET TO DEFAULT VALUE
                 editor.commit();
+                this.finish();
                 startActivity(new Intent(this, MainActivity.class));
                 return true;
 

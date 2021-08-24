@@ -29,19 +29,20 @@ public class Registro extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_registro);
+        binding = ActivityRegistroBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
 
-        edt_reusuario = findViewById(R.id.edt_reusuario);
-        edt_recontraseña = findViewById(R.id.edt_recontraseña);
-        edt_repetircontraseña = findViewById(R.id.edt_repetircontraseña);
-        btn_registrar = findViewById(R.id.btn_registrar);
+//        edt_reusuario = findViewById(R.id.edt_reusuario);
+//        edt_recontraseña = findViewById(R.id.edt_recontraseña);
+//        edt_repetircontraseña = findViewById(R.id.edt_repetircontraseña);
+//        btn_registrar = findViewById(R.id.btn_registrar);
+//
+//        textInputLayout3 = findViewById(R.id.textInputLayout3);
+//        textInputLayout6 = findViewById(R.id.textInputLayout6);
+//        textInputLayout7 = findViewById(R.id.textInputLayout7);
 
-        textInputLayout3 = findViewById(R.id.textInputLayout3);
-        textInputLayout6 = findViewById(R.id.textInputLayout6);
-        textInputLayout7 = findViewById(R.id.textInputLayout7);
 
-
-        edt_reusuario.addTextChangedListener(new TextWatcher() {
+        binding.edtReusuario.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
@@ -50,9 +51,9 @@ public class Registro extends AppCompatActivity {
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 if (s.length() < 21){
-                    textInputLayout3.setError(null);
+                    binding.textInputLayout3.setError(null);
                 } else {
-                    textInputLayout3.setError("Solo se permiten 20 caracteres");
+                    binding.textInputLayout3.setError("Solo se permiten 20 caracteres");
                 }
 
             }
@@ -63,7 +64,7 @@ public class Registro extends AppCompatActivity {
             }
         });
 
-        edt_recontraseña.addTextChangedListener(new TextWatcher() {
+        binding.edtRecontraseA.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
@@ -73,10 +74,10 @@ public class Registro extends AppCompatActivity {
             public void onTextChanged(CharSequence s, int start, int before, int count) {
 
                 if (s.length() > 7){
-                    textInputLayout6.setError(null);
+                    binding.textInputLayout6.setError(null);
                 } else {
-                    textInputLayout6.setError("Deben ser minimo 8 caracteres");
-                    textInputLayout6.setEndIconMode(TextInputLayout.END_ICON_PASSWORD_TOGGLE);
+                    binding.textInputLayout6.setError("Deben ser minimo 8 caracteres");
+                    binding.textInputLayout6.setEndIconMode(TextInputLayout.END_ICON_PASSWORD_TOGGLE);
                 }
             }
 
@@ -86,7 +87,7 @@ public class Registro extends AppCompatActivity {
             }
         });
 
-        edt_repetircontraseña.addTextChangedListener(new TextWatcher() {
+        binding.edtRepetircontraseA.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
@@ -94,12 +95,12 @@ public class Registro extends AppCompatActivity {
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if (s.toString().equals(edt_recontraseña.getText().toString())){
+                if (s.toString().equals(binding.edtRecontraseA.getText().toString())){
                     Toast.makeText(getApplicationContext(), "coincidn", Toast.LENGTH_SHORT).show();
-                    textInputLayout7.setError(null);
+                    binding.textInputLayout7.setError(null);
                 } else {
                     Toast.makeText(getApplicationContext(), "no coiciden", Toast.LENGTH_SHORT).show();
-                    textInputLayout7.setError("No coiciden las contraseñas");
+                    binding.textInputLayout7.setError("No coiciden las contraseñas");
                 }
 //                if (s.length() > 7){
 //                    textInputLayout7.setError(null);
@@ -114,15 +115,15 @@ public class Registro extends AppCompatActivity {
             }
         });
 
-        btn_registrar.setOnClickListener(new View.OnClickListener() {
+        binding.btnRegistrar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (edt_reusuario.getText().length() > 0 && edt_reusuario.getText().length() < 21 && edt_recontraseña.getText().length() > 7 && edt_repetircontraseña.getText().length() > 7){
-                    if (edt_recontraseña.getText().toString().equals(edt_repetircontraseña.getText().toString())){
+                if (binding.edtReusuario.getText().length() > 0 && binding.edtReusuario.getText().length() < 21 && binding.edtRecontraseA.getText().length() > 7 && binding.edtRepetircontraseA.getText().length() > 7){
+                    if (binding.edtRecontraseA.getText().toString().equals(binding.edtRepetircontraseA.getText().toString())){
                         UsuarioCon usuarioCon = new UsuarioCon(getApplicationContext());
                         usuarioCon.open();
-                        String usuario = edt_reusuario.getText().toString();
-                        String contraseña = edt_recontraseña.getText().toString();
+                        String usuario = binding.edtReusuario.getText().toString();
+                        String contraseña = binding.edtRecontraseA.getText().toString();
                         Usuario usuarioAgregar = new Usuario(usuario, contraseña);
 
 

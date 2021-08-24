@@ -14,11 +14,12 @@ import android.widget.Toast;
 
 import com.alfredo.frutas.conexion.Usuario;
 import com.alfredo.frutas.conexion.UsuarioCon;
+import com.alfredo.frutas.databinding.ActivityMainBinding;
 import com.google.android.material.textfield.TextInputEditText;
 
 public class MainActivity extends AppCompatActivity {
 
-
+    private ActivityMainBinding binding;
 
     TextInputEditText edt_usuario, edt_contraseña;
     TextView textView4;
@@ -29,15 +30,16 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        binding = ActivityMainBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
 
-        edt_usuario = findViewById(R.id.edt_usuario);
-        edt_contraseña = findViewById(R.id.edt_contraseña);
-        btn_ingresar = findViewById(R.id.btn_ingresar);
-        textView4 = findViewById(R.id.textView4);
+//        edt_usuario = findViewById(R.id.edt_usuario);
+//        edt_contraseña = findViewById(R.id.edt_contraseña);
+//        btn_ingresar = findViewById(R.id.btn_ingresar);
+//        textView4 = findViewById(R.id.textView4);
 
 
-        textView4.setOnClickListener(new View.OnClickListener() {
+        binding.textView4.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(MainActivity.this, Registro.class));
@@ -47,19 +49,19 @@ public class MainActivity extends AppCompatActivity {
 
 
 
-        btn_ingresar.setOnClickListener(new View.OnClickListener() {
+        binding.btnIngresar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (edt_usuario.getText().length() > 0 && edt_contraseña.getText().length() > 0){
+                if (binding.edtUsuario.getText().length() > 0 && binding.edtContraseA.getText().length() > 0){
                     UsuarioCon usuarioCon = new UsuarioCon(getApplicationContext());
                     usuarioCon.open();
 
-                    String nombre = edt_usuario.getText().toString();
-                    String contraseña = edt_contraseña.getText().toString();
+                    String nombre = binding.edtUsuario.getText().toString();
+                    String contraseña = binding.edtContraseA.getText().toString();
 
                     boolean comprobar = usuarioCon.login(nombre, contraseña);
 
-                    if (comprobar == true){
+                    if (comprobar){
                         preferences = getSharedPreferences("preferences", MODE_PRIVATE);
                         editor = preferences.edit();
                         editor.putString("nombre" , nombre);

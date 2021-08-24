@@ -23,8 +23,7 @@
         <activity
             android:name=".ActualizarFruta"
             android:parentActivityName=".Listado" />
-        <activity android:name=".Listado"
-            android:noHistory="true"/>
+        <activity android:name=".Listado"/>
         <activity
             android:name=".Registro"
             android:parentActivityName=".MainActivity" /> <!-- <activity android:name=".MainActivity"> -->
@@ -33,7 +32,7 @@
         <!-- <category android:name="android.intent.category.LAUNCHER" /> -->
         <!-- </intent-filter> -->
         <!-- </activity> -->
-        <activity android:name=".MainActivity" android:noHistory="true" />
+        <activity android:name=".MainActivity"/>
         <activity
             android:name=".Splash"
             android:noHistory="true"
