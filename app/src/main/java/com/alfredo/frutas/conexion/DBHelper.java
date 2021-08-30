@@ -29,7 +29,13 @@ public class DBHelper extends SQLiteOpenHelper {
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        db.execSQL("DROP TABLE IF EXISTS USUARIO");
-        db.execSQL("DROP TABLE IF EXISTS FRUTAS");
+        if (oldVersion < newVersion){
+            db.execSQL("DROP TABLE IF EXISTS USUARIO");
+            db.execSQL("DROP TABLE IF EXISTS FRUTAS");
+
+            db.execSQL("CREATE TABLE USUARIO (id_usuario INTEGER PRIMARY KEY AUTOINCREMENT, usuario TEXT UNIQUE, contraseña TEXT);");
+            db.execSQL("CREATE TABLE FRUTAS ( id_fruta INTEGER PRIMARY KEY AUTOINCREMENT, nombre TEXT, color TEXT, cantidad TEXT, imagen TEXT DEFAULT 'null', descripcion TEXT, beneficios TEXT, vitaminas TEXT)");
+            oldVersion++;
+        }
     }
 }
