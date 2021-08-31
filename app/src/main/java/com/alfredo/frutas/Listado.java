@@ -2,35 +2,23 @@ package com.alfredo.frutas;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SearchView;
-import androidx.core.view.MenuItemCompat;
 import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
-import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.AbsListView;
-import android.widget.AdapterView;
-import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.Toast;
 
+import com.alfredo.frutas.conexion.AppDataBase;
 import com.alfredo.frutas.conexion.Fruta;
-import com.alfredo.frutas.conexion.FrutaCon;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class Listado extends AppCompatActivity  {
 
@@ -55,9 +43,9 @@ public class Listado extends AppCompatActivity  {
         recyclerView.setLayoutManager(new GridLayoutManager(this, 2));
         recyclerView.setHasFixedSize(true);
 
-        FrutaCon frutaCon = new FrutaCon(getApplicationContext());
-        frutaCon.open();
-        lista = frutaCon.obtenerFrutas();
+
+        AppDataBase appDataBase = AppDataBase.getInstance(this.getApplicationContext());
+        List<Fruta> lista = appDataBase.frutaDao().getAllFrutas();
 
         if (lista.size() > 0){
             customAdapter = new FrutaAdapter(lista, getApplicationContext());
@@ -79,10 +67,8 @@ public class Listado extends AppCompatActivity  {
     public void onResume() {
         super.onResume();
 
-
-        FrutaCon frutaCon = new FrutaCon(getApplicationContext());
-        frutaCon.open();
-        lista = frutaCon.obtenerFrutas();
+        AppDataBase appDataBase = AppDataBase.getInstance(this.getApplicationContext());
+        List<Fruta> lista = appDataBase.frutaDao().getAllFrutas();
 
         if (lista.size() > 0){
             FrutaAdapter customAdapter = new FrutaAdapter(lista, getApplicationContext());

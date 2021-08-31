@@ -8,14 +8,11 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 import android.Manifest;
-import android.app.Dialog;
 import android.content.ContentValues;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
@@ -26,22 +23,19 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.AutoCompleteTextView;
 import android.widget.Button;
-import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import com.alfredo.frutas.conexion.AppDataBase;
 import com.alfredo.frutas.conexion.Fruta;
-import com.alfredo.frutas.conexion.FrutaCon;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.CustomTarget;
 import com.bumptech.glide.request.transition.Transition;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
 import com.google.android.material.textfield.TextInputEditText;
-import com.google.android.material.textfield.TextInputLayout;
 import com.theartofdev.edmodo.cropper.CropImage;
 import com.theartofdev.edmodo.cropper.CropImageView;
 
@@ -100,51 +94,6 @@ public class AgregarFruta extends AppCompatActivity implements Dialogo.Custom_di
         chipK = findViewById(R.id.chipK);
         chipB1 = findViewById(R.id.chipB1);
 
-
-//        if (getIntent().hasExtra("lista")){
-//            lista = (ArrayList<Chips>) getIntent().getSerializableExtra("lista");
-//            //Toast.makeText(AgregarFruta.this, lista.toString(), Toast.LENGTH_SHORT).show();
-//
-//            chips = lista.toArray(new String[lista.size()]);
-//            for(String genre : chips) {
-//                Chip chip = (Chip) getLayoutInflater().inflate(R.layout.chip_item, null, false);
-//                chip.setText(genre);
-//
-//                chip.setOnCloseIconClickListener(new View.OnClickListener() {
-//                    @Override
-//                    public void onClick(View v) {
-//                        chipGroup3.removeView(v);
-//                    }
-//                });
-//
-//                chipGroup3.addView(chip);
-//            }
-//
-//
-//            ///////////////////////////////////////
-//            StringBuilder str = new StringBuilder();
-//            for(int i=0;i<chips.length;i++){
-//                str.append(chips[i]+"|");
-//            }
-//            resultado = str.toString();
-//            //Toast.makeText(AgregarFruta.this, resultado, Toast.LENGTH_SHORT).show();
-//        }
-
-//        String[] genres = {"Thriller", "Comedy", "Adventure"};
-//        for(String genre : genres) {
-//            Chip chip = (Chip) getLayoutInflater().inflate(R.layout.chip_item, null, false);
-//            chip.setText(genre);
-//
-//            chip.setOnCloseIconClickListener(new View.OnClickListener() {
-//                @Override
-//                public void onClick(View v) {
-//                    chipGroup3.removeView(v);
-//                }
-//            });
-//
-//            chipGroup3.addView(chip);
-//        }
-
         adapter = new ArrayAdapter<String>(getApplicationContext(), android.R.layout.simple_list_item_1, getResources().getStringArray(R.array.spinner));
         spinner_fruta.setAdapter(adapter);
 
@@ -184,8 +133,9 @@ public class AgregarFruta extends AppCompatActivity implements Dialogo.Custom_di
         switch (item.getItemId()) {
             case R.id.guardarMenu:
                 if (edt_nombre.getText().length() > 0 && edt_cantidad.getText().length() > 0 && edt_cantidad.getText().length() <8){
-                    FrutaCon frutaCon = new FrutaCon(getApplicationContext());
-                    frutaCon.open();
+
+                    AppDataBase appDataBase = AppDataBase.getInstance(this.getApplicationContext());
+
 
                     String nombre = edt_nombre.getText().toString();
                     Integer cantidad = Integer.parseInt(edt_cantidad.getText().toString());
@@ -214,13 +164,35 @@ public class AgregarFruta extends AppCompatActivity implements Dialogo.Custom_di
                     //////////////////////////////////////////////////////////
 
                     if (imagenUri != null){
-                        Fruta fruta = new Fruta(nombre, item_seleccionado, cantidad, imagenUri.getPath(), descripcion, beneficios, resultado);
-                        frutaCon.agregarFruta(fruta);
+
+                        Fruta fruta = new Fruta();
+                        fruta.setNombre(nombre);
+                        fruta.setColor(item_seleccionado);
+                        fruta.setCantidad(cantidad);
+                        fruta.setImagen(imagenUri.getPath());
+                        fruta.setDescripcion(descripcion);
+                        fruta.setBeneficios(beneficios);
+                        fruta.setVitaminas(resultado);
+
+
+                        appDataBase.frutaDao().insertFruta(fruta);
+
+
                         finish();
                         Toast.makeText(getApplicationContext(), "Registro exitoso", Toast.LENGTH_LONG).show();
                     } else {
-                        Fruta fruta = new Fruta(nombre, item_seleccionado, cantidad, descripcion, beneficios, resultado);
-                        frutaCon.agregarFruta(fruta);
+
+                        Fruta fruta = new Fruta();
+                        fruta.setNombre(nombre);
+                        fruta.setColor(item_seleccionado);
+                        fruta.setCantidad(cantidad);
+                        fruta.setDescripcion(descripcion);
+                        fruta.setBeneficios(beneficios);
+                        fruta.setVitaminas(resultado);
+
+
+                        appDataBase.frutaDao().insertFruta(fruta);
+
                         finish();
                         Toast.makeText(getApplicationContext(), "Registro exitoso", Toast.LENGTH_LONG).show();
                         Toast.makeText(getApplicationContext(), "seleccionar un color: " + item_seleccionado, Toast.LENGTH_LONG).show();
@@ -262,11 +234,6 @@ public class AgregarFruta extends AppCompatActivity implements Dialogo.Custom_di
                         elegirdeGaleria();
                     }
                 } else if (which == 2){
-//                    AlertDialog.Builder builder = new AlertDialog.Builder(AgregarFruta.this);
-//                    builder.setTitle("url");
-//                    builder.setMessage("Ingresa la url");
-//                    builder.create().show();
-
                     abrirDialogo();
                 }
             }
@@ -280,15 +247,6 @@ public class AgregarFruta extends AppCompatActivity implements Dialogo.Custom_di
         Dialogo dialogo = new Dialogo();
         dialogo.show(getSupportFragmentManager(), "Ingresa la url");
 
-//        ContentValues values = new ContentValues();
-//        values.put(MediaStore.Images.Media.TITLE, "Titulo de la imagen");
-//        values.put(MediaStore.Images.Media.DESCRIPTION, "Descripcion de la imagen");
-//
-//        imagenUri = getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
-//
-//        Intent intent = new Intent(Intent.ACTION_PICK);
-//        intent.putExtra(MediaStore.EXTRA_OUTPUT, imagenUri);
-//        startActivityForResult(intent, IMAGE_PICK_CAMERA_CODE);
     }
 
     private void elegirdeGaleria() {

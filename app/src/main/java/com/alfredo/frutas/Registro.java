@@ -9,11 +9,10 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.Toast;
 
+import com.alfredo.frutas.conexion.AppDataBase;
 import com.alfredo.frutas.conexion.Usuario;
-import com.alfredo.frutas.conexion.UsuarioCon;
 import com.alfredo.frutas.databinding.ActivityRegistroBinding;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
@@ -120,34 +119,19 @@ public class Registro extends AppCompatActivity {
             public void onClick(View v) {
                 if (binding.edtReusuario.getText().length() > 0 && binding.edtReusuario.getText().length() < 21 && binding.edtRecontraseA.getText().length() > 7 && binding.edtRepetircontraseA.getText().length() > 7){
                     if (binding.edtRecontraseA.getText().toString().equals(binding.edtRepetircontraseA.getText().toString())){
-                        UsuarioCon usuarioCon = new UsuarioCon(getApplicationContext());
-                        usuarioCon.open();
+
                         String usuario = binding.edtReusuario.getText().toString();
                         String contraseña = binding.edtRecontraseA.getText().toString();
-                        Usuario usuarioAgregar = new Usuario(usuario, contraseña);
 
+                        AppDataBase appDataBase = AppDataBase.getInstance(getApplicationContext());
+                        Usuario comprobar = appDataBase.usuarioDao().comprobar(usuario);
 
-                        //long id = usuarioCon.agregarUsuario(usuarioAgregar);
-
-
-                        boolean comprobar = usuarioCon.login(usuario);
-
-                        if (comprobar == false){
-                            usuarioCon.agregarUsuario(usuarioAgregar);
-
-                            SharedPreferences preferences = getSharedPreferences("preferences", MODE_PRIVATE);
-                            SharedPreferences.Editor editor = preferences.edit();
-                            editor.putString("nombre" , usuario);
-                            editor.putString("contraseña", contraseña);
-                            editor.commit();
-
-
-                            startActivity(new Intent(Registro.this, Listado.class));
-                            finish();
-                            Toast.makeText(getApplicationContext(), "Registro exitoso", Toast.LENGTH_LONG).show();
+                        if (comprobar == null){
+                            guardarUsuario(binding.edtReusuario.getText().toString(), binding.edtRecontraseA.getText().toString());
                         } else {
                             Toast.makeText(getApplicationContext(), "Usuario ya existe", Toast.LENGTH_LONG).show();
                         }
+
 
 
                     }else {
@@ -163,5 +147,24 @@ public class Registro extends AppCompatActivity {
                 }
             }
         });
+    }
+
+    private void guardarUsuario(String nombre, String contraseña){
+        AppDataBase appDataBase = AppDataBase.getInstance(this.getApplicationContext());
+
+        Usuario usuario = new Usuario();
+        usuario.setUsuario(nombre);
+        usuario.setContraseña(contraseña);
+        appDataBase.usuarioDao().insertUsuario(usuario);
+
+        SharedPreferences preferences = getSharedPreferences("preferences", MODE_PRIVATE);
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putString("nombre" , nombre);
+        editor.putString("contraseña", contraseña);
+        editor.commit();
+
+        startActivity(new Intent(Registro.this, Listado.class));
+        finish();
+        Toast.makeText(getApplicationContext(), "Registro exitoso", Toast.LENGTH_LONG).show();
     }
 }

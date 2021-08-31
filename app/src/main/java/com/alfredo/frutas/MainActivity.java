@@ -2,18 +2,16 @@ package com.alfredo.frutas;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.alfredo.frutas.conexion.AppDataBase;
 import com.alfredo.frutas.conexion.Usuario;
-import com.alfredo.frutas.conexion.UsuarioCon;
 import com.alfredo.frutas.databinding.ActivityMainBinding;
 import com.google.android.material.textfield.TextInputEditText;
 
@@ -59,9 +57,13 @@ public class MainActivity extends AppCompatActivity {
                     String nombre = binding.edtUsuario.getText().toString();
                     String contraseña = binding.edtContraseA.getText().toString();
 
-                    boolean comprobar = usuarioCon.login(nombre, contraseña);
 
-                    if (comprobar){
+                    AppDataBase appDataBase = AppDataBase.getInstance(getApplicationContext());
+
+                    Usuario usuario = appDataBase.usuarioDao().login(nombre, contraseña);
+
+
+                    if (usuario != null){
                         preferences = getSharedPreferences("preferences", MODE_PRIVATE);
                         editor = preferences.edit();
                         editor.putString("nombre" , nombre);

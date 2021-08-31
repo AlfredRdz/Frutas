@@ -27,8 +27,8 @@ import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import com.alfredo.frutas.conexion.AppDataBase;
 import com.alfredo.frutas.conexion.Fruta;
-import com.alfredo.frutas.conexion.FrutaCon;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.CustomTarget;
 import com.bumptech.glide.request.transition.Transition;
@@ -136,14 +136,33 @@ public class ActualizarFruta extends AppCompatActivity implements Dialogo.Custom
                     String beneficios = edt_beneficiosAC.getText().toString();
 
                     if (!imagenUri.toString().equals("null")){
-                        Fruta fruta = new Fruta(Integer.valueOf(id), nombre, item_seleccionado, cantidad, imagenUri.getPath(), descripcion, beneficios, resultado);
-                        frutaCon.actualizarFruta(fruta);
+                        Fruta fruta = new Fruta();
+                        fruta.setId_fruta(Integer.parseInt(id));
+                        fruta.setNombre(nombre);
+                        fruta.setColor(item_seleccionado);
+                        fruta.setCantidad(cantidad);
+                        fruta.setImagen(imagenUri.getPath());
+                        fruta.setDescripcion(descripcion);
+                        fruta.setBeneficios(beneficios);
+                        fruta.setVitaminas(resultado);
+
+                        AppDataBase appDataBase = AppDataBase.getInstance(this.getApplicationContext());
+                        appDataBase.frutaDao().actualizarFruta(fruta);
 
                         Toast.makeText(ActualizarFruta.this, "Se ha actualizado la fruta", Toast.LENGTH_LONG).show();
                         finish();
                     } else {
-                        Fruta fruta = new Fruta(Integer.valueOf(id), nombre, item_seleccionado, cantidad, null, descripcion, beneficios, resultado);
-                        frutaCon.actualizarFruta(fruta);
+                        Fruta fruta = new Fruta();
+                        fruta.setId_fruta(Integer.parseInt(id));
+                        fruta.setNombre(nombre);
+                        fruta.setColor(item_seleccionado);
+                        fruta.setCantidad(cantidad);
+                        fruta.setDescripcion(descripcion);
+                        fruta.setBeneficios(beneficios);
+                        fruta.setVitaminas(resultado);
+
+                        AppDataBase appDataBase = AppDataBase.getInstance(this.getApplicationContext());
+                        appDataBase.frutaDao().actualizarFruta(fruta);
 
                         Toast.makeText(ActualizarFruta.this, "Se ha actualizado la fruta", Toast.LENGTH_LONG).show();
                         finish();
@@ -337,7 +356,6 @@ public class ActualizarFruta extends AppCompatActivity implements Dialogo.Custom
             edt_descripcionAC.setText(descripcion);
             edt_beneficiosAC.setText(beneficios);
 
-            //Toast.makeText(ActualizarFruta.this, vitaminas, Toast.LENGTH_SHORT).show();
 
             String[] array = vitaminas.split("\\|");
 
@@ -346,34 +364,20 @@ public class ActualizarFruta extends AppCompatActivity implements Dialogo.Custom
                 Chip chip = (Chip) getLayoutInflater().inflate(R.layout.chip_item, null, false);
                 chip.setText(genre);
 
-//                chip.setOnCloseIconClickListener(new View.OnClickListener() {
-//                    @Override
-//                    public void onClick(View v) {
-//                        chipGroupA.removeView(v);
-//                    }
-//                });
-
                 chipGroupA.addView(chip);
 
                 StringBuilder str = new StringBuilder();
                 str.append(genre+"|");
                 resultado = str.toString();
             }
-//            StringBuilder str = new StringBuilder();
-//            for(int i=0;i<array.length;i++){
-//                str.append(array[i]+"|");
-//            }
-//            resultado = str.toString();
 
-            //Toast.makeText(ActualizarFruta.this, array[2], Toast.LENGTH_SHORT).show();
 
             adapter = new ArrayAdapter<>(getApplicationContext(), android.R.layout.simple_list_item_1, getResources().getStringArray(R.array.spinner));
             spinner_agregar.setAdapter(adapter);
-            int position = adapter.getPosition(color);
 
 
             spinner_agregar.setSelection(((ArrayAdapter<String>)spinner_agregar.getAdapter()).getPosition(color));
-//            combo_categoria.setSelection(Integer.parseInt(getIntent().getStringExtra("categoria")) - 1);
+
 
             if (imagenUri == null){
                 imageView2.setImageResource(R.drawable.ic_datos);

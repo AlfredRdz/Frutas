@@ -1,54 +1,29 @@
 package com.alfredo.frutas.conexion;
 
+import androidx.room.ColumnInfo;
+import androidx.room.Entity;
+import androidx.room.PrimaryKey;
+
+@Entity
 public class Fruta {
+    @PrimaryKey(autoGenerate = true)
+    @ColumnInfo(name = "id_fruta")
     private Integer id_fruta;
+    @ColumnInfo(name = "nombre")
     private String nombre;
+    @ColumnInfo(name = "color")
     private String color;
+    @ColumnInfo(name = "cantidad")
     private Integer cantidad;
+    @ColumnInfo(name = "imagen")
     private String imagen;
+    @ColumnInfo(name = "descripcion")
     private String descripcion;
+    @ColumnInfo(name = "beneficios")
     private String beneficios;
+    @ColumnInfo(name = "vitaminas")
     private String vitaminas;
 
-    public Fruta(Integer id_fruta, String nombre, String color, Integer cantidad, String imagen, String descripcion, String beneficios, String vitaminas) {
-        this.id_fruta = id_fruta;
-        this.nombre = nombre;
-        this.color = color;
-        this.cantidad = cantidad;
-        this.imagen = imagen;
-        this.descripcion = descripcion;
-        this.beneficios = beneficios;
-        this.vitaminas = vitaminas;
-    }
-
-    public Fruta(Integer id_fruta, String nombre, String color, Integer cantidad, String descripcion, String beneficios, String vitaminas) {
-        this.id_fruta = id_fruta;
-        this.nombre = nombre;
-        this.color = color;
-        this.cantidad = cantidad;
-        this.descripcion = descripcion;
-        this.beneficios = beneficios;
-        this.vitaminas = vitaminas;
-    }
-
-    public Fruta(String nombre, String color, Integer cantidad, String imagen, String descripcion, String beneficios, String vitaminas) {
-        this.nombre = nombre;
-        this.color = color;
-        this.cantidad = cantidad;
-        this.imagen = imagen;
-        this.descripcion = descripcion;
-        this.beneficios = beneficios;
-        this.vitaminas = vitaminas;
-    }
-
-    public Fruta(String nombre, String color, Integer cantidad, String descripcion, String beneficios, String vitaminas) {
-        this.nombre = nombre;
-        this.color = color;
-        this.cantidad = cantidad;
-        this.descripcion = descripcion;
-        this.beneficios = beneficios;
-        this.vitaminas = vitaminas;
-    }
 
     public Integer getId_fruta() {
         return id_fruta;

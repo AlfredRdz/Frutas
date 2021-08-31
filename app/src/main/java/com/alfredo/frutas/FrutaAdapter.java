@@ -12,21 +12,18 @@ import android.view.ViewGroup;
 import android.widget.Filter;
 import android.widget.Filterable;
 import android.widget.ImageView;
-import android.widget.SearchView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.alfredo.frutas.conexion.AppDataBase;
 import com.alfredo.frutas.conexion.Fruta;
-import com.alfredo.frutas.conexion.FrutaCon;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class FrutaAdapter extends RecyclerView.Adapter<FrutaAdapter.MyViewHolder> implements Filterable {
 
@@ -79,10 +76,11 @@ public class FrutaAdapter extends RecyclerView.Adapter<FrutaAdapter.MyViewHolder
                         .setPositiveButton("si", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                FrutaCon frutaCon = new FrutaCon(v.getContext());
-                                frutaCon.open();
+                                fruta.getId_fruta();
+                                AppDataBase appDataBase = AppDataBase.getInstance(v.getContext());
 
-                                frutaCon.eliminarFruta(fruta.getId_fruta());
+                                appDataBase.frutaDao().deleteFruta(fruta);
+
                                 frutas.remove(position);
                                 notifyItemRemoved(position);
                                 notifyItemRangeChanged(position, getItemCount());
@@ -124,14 +122,6 @@ public class FrutaAdapter extends RecyclerView.Adapter<FrutaAdapter.MyViewHolder
         return frutas.size();
     }
 
-
-//    public void setFilter(ArrayList<Fruta> newList) {
-//
-//        frutas = new ArrayList<>();
-//        frutas.addAll(newList);
-//        notifyDataSetChanged();
-//
-//    }
 
     @Override
     public Filter getFilter() {
