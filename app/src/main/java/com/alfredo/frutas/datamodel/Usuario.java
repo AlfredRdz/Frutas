@@ -1,4 +1,4 @@
-package com.alfredo.frutas.conexion;
+package com.alfredo.frutas.datamodel;
 
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;

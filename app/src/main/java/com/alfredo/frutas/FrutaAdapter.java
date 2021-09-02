@@ -19,7 +19,7 @@ import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.alfredo.frutas.conexion.AppDataBase;
-import com.alfredo.frutas.conexion.Fruta;
+import com.alfredo.frutas.datamodel.Fruta;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -30,12 +30,10 @@ public class FrutaAdapter extends RecyclerView.Adapter<FrutaAdapter.MyViewHolder
     List<Fruta> frutas;
     List<Fruta> frutasAll;
     Context context;
-    FrutaCon frutaCon;
 
     public FrutaAdapter(List<Fruta> frutas, Context context){
         this.frutas = frutas;
         this.context = context;
-        frutaCon = new FrutaCon(context);
         this.frutasAll = new ArrayList<>(frutas);
     }
 

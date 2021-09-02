@@ -28,7 +28,7 @@ import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.alfredo.frutas.conexion.AppDataBase;
-import com.alfredo.frutas.conexion.Fruta;
+import com.alfredo.frutas.datamodel.Fruta;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.CustomTarget;
 import com.bumptech.glide.request.transition.Transition;
@@ -127,8 +127,7 @@ public class ActualizarFruta extends AppCompatActivity implements Dialogo.Custom
         switch (item.getItemId()) {
             case R.id.guardarMenu:
                 if (edt_nombreAC.getText().length() > 0 &&  edt_cantidadAC.getText().length() < 8){
-                    FrutaCon frutaCon = new FrutaCon(getApplicationContext());
-                    frutaCon.open();
+
 
                     String nombre = edt_nombreAC.getText().toString();
                     Integer cantidad = Integer.parseInt(edt_cantidadAC.getText().toString());

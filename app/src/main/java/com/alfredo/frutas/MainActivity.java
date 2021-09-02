@@ -5,23 +5,24 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.alfredo.frutas.conexion.AppDataBase;
-import com.alfredo.frutas.conexion.Usuario;
+import com.alfredo.frutas.datamodel.Usuario;
 import com.alfredo.frutas.databinding.ActivityMainBinding;
+import com.alfredo.frutas.interfaces.LoginMVP;
+import com.alfredo.frutas.presenter.LoginPresenter;
 import com.google.android.material.textfield.TextInputEditText;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements LoginMVP.View {
 
+    private static final String TAG = "View";
     private ActivityMainBinding binding;
 
-    TextInputEditText edt_usuario, edt_contraseña;
-    TextView textView4;
-    Button btn_ingresar;
     SharedPreferences preferences;
     SharedPreferences.Editor editor;
 
@@ -31,11 +32,7 @@ public class MainActivity extends AppCompatActivity {
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-//        edt_usuario = findViewById(R.id.edt_usuario);
-//        edt_contraseña = findViewById(R.id.edt_contraseña);
-//        btn_ingresar = findViewById(R.id.btn_ingresar);
-//        textView4 = findViewById(R.id.textView4);
-
+        LoginPresenter.getPresenter(MainActivity.this).setView(this);
 
         binding.textView4.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -46,41 +43,58 @@ public class MainActivity extends AppCompatActivity {
         });
 
 
-
         binding.btnIngresar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (binding.edtUsuario.getText().length() > 0 && binding.edtContraseA.getText().length() > 0){
-                    UsuarioCon usuarioCon = new UsuarioCon(getApplicationContext());
-                    usuarioCon.open();
 
                     String nombre = binding.edtUsuario.getText().toString();
                     String contraseña = binding.edtContraseA.getText().toString();
 
+                    LoginPresenter.getPresenter(MainActivity.this).executeLogin(nombre, contraseña);
 
-                    AppDataBase appDataBase = AppDataBase.getInstance(getApplicationContext());
-
-                    Usuario usuario = appDataBase.usuarioDao().login(nombre, contraseña);
-
-
-                    if (usuario != null){
-                        preferences = getSharedPreferences("preferences", MODE_PRIVATE);
-                        editor = preferences.edit();
-                        editor.putString("nombre" , nombre);
-                        editor.putString("contraseña", contraseña);
-                        editor.commit();
-
-                        finish();
-                        Intent intent = new Intent(MainActivity.this, Listado.class);
-                        startActivity(intent);
-                    }else{
-                        Toast.makeText(getApplicationContext(), "Datos incorrectos" , Toast.LENGTH_LONG).show();
-                    }
+//                    AppDataBase appDataBase = AppDataBase.getInstance(getApplicationContext());
+//
+//                    Usuario usuario = appDataBase.usuarioDao().login(nombre, contraseña);
+//
+//
+//                    if (usuario != null){
+//                        preferences = getSharedPreferences("preferences", MODE_PRIVATE);
+//                        editor = preferences.edit();
+//                        editor.putString("nombre" , nombre);
+//                        editor.putString("contraseña", contraseña);
+//                        editor.commit();
+//
+//                        finish();
+//                        Intent intent = new Intent(MainActivity.this, Listado.class);
+//                        startActivity(intent);
+//                    }else{
+//                        Toast.makeText(getApplicationContext(), "Datos incorrectos" , Toast.LENGTH_LONG).show();
+//                    }
 
                 }else {
                     Toast.makeText(getApplicationContext(), "Debes ingresar todos los campos" , Toast.LENGTH_LONG).show();
                 }
             }
         });
+    }
+
+    @Override
+    public void showProgressBar(boolean isShowing) {
+        Log.i(TAG, "showProgressBar: " + isShowing);
+        binding.progressBar.setVisibility(!isShowing ? View.VISIBLE : View.GONE);
+    }
+
+    @Override
+    public void onSuccess(String name, String password) {
+        preferences = getSharedPreferences("preferences", MODE_PRIVATE);
+        editor = preferences.edit();
+        editor.putString("nombre" , name);
+        editor.putString("contraseña", password);
+        editor.commit();
+
+        finish();
+        Intent intent = new Intent(MainActivity.this, Listado.class);
+        startActivity(intent);
     }
 }

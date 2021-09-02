@@ -12,7 +12,7 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import com.alfredo.frutas.conexion.AppDataBase;
-import com.alfredo.frutas.conexion.Usuario;
+import com.alfredo.frutas.datamodel.Usuario;
 import com.alfredo.frutas.databinding.ActivityRegistroBinding;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;

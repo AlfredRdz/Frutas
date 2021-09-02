@@ -29,7 +29,7 @@ import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.alfredo.frutas.conexion.AppDataBase;
-import com.alfredo.frutas.conexion.Fruta;
+import com.alfredo.frutas.datamodel.Fruta;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.CustomTarget;
 import com.bumptech.glide.request.transition.Transition;
@@ -195,7 +195,6 @@ public class AgregarFruta extends AppCompatActivity implements Dialogo.Custom_di
 
                         finish();
                         Toast.makeText(getApplicationContext(), "Registro exitoso", Toast.LENGTH_LONG).show();
-                        Toast.makeText(getApplicationContext(), "seleccionar un color: " + item_seleccionado, Toast.LENGTH_LONG).show();
                     }
                 }else{
                     edt_cantidad.requestFocus();

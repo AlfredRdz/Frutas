@@ -6,7 +6,10 @@ import androidx.room.Database;
 import androidx.room.Room;
 import androidx.room.RoomDatabase;
 
-import java.util.UUID;
+import com.alfredo.frutas.datamodel.Fruta;
+import com.alfredo.frutas.datamodel.FrutaDao;
+import com.alfredo.frutas.datamodel.Usuario;
+import com.alfredo.frutas.datamodel.UsuarioDao;
 
 @Database(entities = {Fruta.class, Usuario.class}, version = 1)
 public abstract class AppDataBase extends RoomDatabase {

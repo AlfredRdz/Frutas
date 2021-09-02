@@ -15,12 +15,14 @@ import android.view.View;
 import android.widget.ImageView;
 
 import com.alfredo.frutas.conexion.AppDataBase;
-import com.alfredo.frutas.conexion.Fruta;
+import com.alfredo.frutas.datamodel.Fruta;
+import com.alfredo.frutas.interfaces.ListadoMVP;
+import com.alfredo.frutas.presenter.ListadoPresenter;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.List;
 
-public class Listado extends AppCompatActivity  {
+public class Listado extends AppCompatActivity implements ListadoMVP.View {
 
     FloatingActionButton btn_agregar;
     RecyclerView recyclerView;
@@ -40,20 +42,23 @@ public class Listado extends AppCompatActivity  {
 //        recyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
 //        recyclerView.setHasFixedSize(true);
 
+        ListadoPresenter.getPresenter(Listado.this).setView(this);
+
         recyclerView.setLayoutManager(new GridLayoutManager(this, 2));
         recyclerView.setHasFixedSize(true);
 
+        ListadoPresenter.getPresenter(Listado.this).executeAdapter();
 
-        AppDataBase appDataBase = AppDataBase.getInstance(this.getApplicationContext());
-        List<Fruta> lista = appDataBase.frutaDao().getAllFrutas();
-
-        if (lista.size() > 0){
-            customAdapter = new FrutaAdapter(lista, getApplicationContext());
-            recyclerView.setAdapter(customAdapter);
-            imageView_vaciop.setVisibility(View.GONE);
-        }else{
-            imageView_vaciop.setVisibility(View.VISIBLE);
-        }
+//        AppDataBase appDataBase = AppDataBase.getInstance(this.getApplicationContext());
+//        List<Fruta> lista = appDataBase.frutaDao().getAllFrutas();
+//
+//        if (lista.size() > 0){
+//            customAdapter = new FrutaAdapter(lista, getApplicationContext());
+//            recyclerView.setAdapter(customAdapter);
+//            imageView_vaciop.setVisibility(View.GONE);
+//        }else{
+//            imageView_vaciop.setVisibility(View.VISIBLE);
+//        }
 
         btn_agregar.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -67,16 +72,18 @@ public class Listado extends AppCompatActivity  {
     public void onResume() {
         super.onResume();
 
-        AppDataBase appDataBase = AppDataBase.getInstance(this.getApplicationContext());
-        List<Fruta> lista = appDataBase.frutaDao().getAllFrutas();
+        ListadoPresenter.getPresenter(Listado.this).executeAdapter();
 
-        if (lista.size() > 0){
-            FrutaAdapter customAdapter = new FrutaAdapter(lista, getApplicationContext());
-            recyclerView.setAdapter(customAdapter);
-            imageView_vaciop.setVisibility(View.GONE);
-        }else{
-            imageView_vaciop.setVisibility(View.VISIBLE);
-        }
+//        AppDataBase appDataBase = AppDataBase.getInstance(this.getApplicationContext());
+//        List<Fruta> lista = appDataBase.frutaDao().getAllFrutas();
+//
+//        if (lista.size() > 0){
+//            FrutaAdapter customAdapter = new FrutaAdapter(lista, getApplicationContext());
+//            recyclerView.setAdapter(customAdapter);
+//            imageView_vaciop.setVisibility(View.GONE);
+//        }else{
+//            imageView_vaciop.setVisibility(View.VISIBLE);
+//        }
     }
 
     public boolean onCreateOptionsMenu(Menu menu){
@@ -123,5 +130,18 @@ public class Listado extends AppCompatActivity  {
     public void onBackPressed() {
         super.onBackPressed();
         finish();
+    }
+
+    @Override
+    public void showList(List<Fruta> frutaList) {
+        List<Fruta> lista = frutaList;
+
+        if (lista.size() > 0){
+            customAdapter = new FrutaAdapter(lista, getApplicationContext());
+            recyclerView.setAdapter(customAdapter);
+            imageView_vaciop.setVisibility(View.GONE);
+        }else{
+            imageView_vaciop.setVisibility(View.VISIBLE);
+        }
     }
 }
