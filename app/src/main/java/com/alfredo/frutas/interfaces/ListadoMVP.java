@@ -19,5 +19,6 @@ public interface ListadoMVP {
     interface Model {
         void setPresenter(Presenter presenter);
         void doAdapte();
+        List<Fruta> getFrutas();
     }
 }

@@ -25,7 +25,7 @@ public class ListadoPresenter {
                 @Override
                 public void executeAdapter() {
                     ListadoModel.getIntance(context).setPresenter(this);
-                    ListadoModel.getIntance(context).doAdapte();
+                    ListadoModel.getIntance(context).getFrutas();
                 }
 
                 @Override

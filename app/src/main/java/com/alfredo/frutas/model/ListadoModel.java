@@ -28,15 +28,19 @@ public class ListadoModel {
                 public void doAdapte() {
                     Log.i(TAG, "doLogin: modelo " );
 
+
+                }
+
+                @Override
+                public List<Fruta> getFrutas() {
                     AppDataBase appDataBase = AppDataBase.getInstance(context);
 
                     List<Fruta> lista = appDataBase.frutaDao().getAllFrutas();
 
                     if (lista.size() > 0) {
                         ListadoModel.presenter.success(lista);
-                    } else {
-
                     }
+                    return lista;
                 }
             };
         }

@@ -30,6 +30,8 @@ import android.widget.Toast;
 
 import com.alfredo.frutas.conexion.AppDataBase;
 import com.alfredo.frutas.datamodel.Fruta;
+import com.alfredo.frutas.interfaces.AgregarProductoMVP;
+import com.alfredo.frutas.presenter.AgregarProductoPresenter;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.CustomTarget;
 import com.bumptech.glide.request.transition.Transition;
@@ -45,7 +47,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class AgregarFruta extends AppCompatActivity implements Dialogo.Custom_dialog{
+public class AgregarFruta extends AppCompatActivity implements Dialogo.Custom_dialog, AgregarProductoMVP.View {
     TextInputEditText edt_nombre, edt_cantidad, edt_descripcion, edt_beneficios;
     ImageView imageViewFruta;
     Spinner spinner_fruta;
@@ -94,9 +96,10 @@ public class AgregarFruta extends AppCompatActivity implements Dialogo.Custom_di
         chipK = findViewById(R.id.chipK);
         chipB1 = findViewById(R.id.chipB1);
 
+        AgregarProductoPresenter.getPresenter(AgregarFruta.this).setView(this);
+
         adapter = new ArrayAdapter<String>(getApplicationContext(), android.R.layout.simple_list_item_1, getResources().getStringArray(R.array.spinner));
         spinner_fruta.setAdapter(adapter);
-
 
         spinner_fruta.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -156,7 +159,6 @@ public class AgregarFruta extends AppCompatActivity implements Dialogo.Custom_di
                                 lista.add(chip.getText().toString());
                             }
                         }
-                        //chipGroup.addView(chip);
                     }
 
                     resultado = builder.toString();
@@ -165,37 +167,15 @@ public class AgregarFruta extends AppCompatActivity implements Dialogo.Custom_di
 
                     if (imagenUri != null){
 
-                        Fruta fruta = new Fruta();
-                        fruta.setNombre(nombre);
-                        fruta.setColor(item_seleccionado);
-                        fruta.setCantidad(cantidad);
-                        fruta.setImagen(imagenUri.getPath());
-                        fruta.setDescripcion(descripcion);
-                        fruta.setBeneficios(beneficios);
-                        fruta.setVitaminas(resultado);
+                        AgregarProductoPresenter.getPresenter(AgregarFruta.this).executeRegisterImage(nombre, item_seleccionado, cantidad, imagenUri.getPath(), descripcion, beneficios, resultado);
 
-
-                        appDataBase.frutaDao().insertFruta(fruta);
-
-
-                        finish();
-                        Toast.makeText(getApplicationContext(), "Registro exitoso", Toast.LENGTH_LONG).show();
                     } else {
 
-                        Fruta fruta = new Fruta();
-                        fruta.setNombre(nombre);
-                        fruta.setColor(item_seleccionado);
-                        fruta.setCantidad(cantidad);
-                        fruta.setDescripcion(descripcion);
-                        fruta.setBeneficios(beneficios);
-                        fruta.setVitaminas(resultado);
+                        AgregarProductoPresenter.getPresenter(AgregarFruta.this).executeRegister(nombre, item_seleccionado, cantidad, descripcion, beneficios, resultado);
 
 
-                        appDataBase.frutaDao().insertFruta(fruta);
-
-                        finish();
-                        Toast.makeText(getApplicationContext(), "Registro exitoso", Toast.LENGTH_LONG).show();
                     }
+
                 }else{
                     edt_cantidad.requestFocus();
                     edt_cantidad.setError("Max. 7 Caracteres");
@@ -407,5 +387,11 @@ public class AgregarFruta extends AppCompatActivity implements Dialogo.Custom_di
             public void onLoadCleared(Drawable placeholder) {
             }
         });
+    }
+
+    @Override
+    public void onSuccess(String message) {
+        this.finish();
+        Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG).show();
     }
 }

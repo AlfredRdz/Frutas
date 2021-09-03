@@ -29,6 +29,8 @@ import android.widget.Toast;
 
 import com.alfredo.frutas.conexion.AppDataBase;
 import com.alfredo.frutas.datamodel.Fruta;
+import com.alfredo.frutas.interfaces.ActualizarProductoMVP;
+import com.alfredo.frutas.presenter.ActualizarProductoPresenter;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.CustomTarget;
 import com.bumptech.glide.request.transition.Transition;
@@ -43,7 +45,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 
-public class ActualizarFruta extends AppCompatActivity implements Dialogo.Custom_dialog {
+public class ActualizarFruta extends AppCompatActivity implements Dialogo.Custom_dialog, ActualizarProductoMVP.View {
 
     TextInputEditText edt_nombreAC, edt_cantidadAC, edt_descripcionAC, edt_beneficiosAC;
     ImageView imageView2;
@@ -84,6 +86,8 @@ public class ActualizarFruta extends AppCompatActivity implements Dialogo.Custom
         imageView2 = findViewById(R.id.imageView2);
         spinner_agregar = findViewById(R.id.spinner_agregar);
         chipGroupA = findViewById(R.id.chipGroupA);
+
+        ActualizarProductoPresenter.getPresenter(ActualizarFruta.this).setView(this);
 
 
         adapter = new ArrayAdapter<>(getApplicationContext(), android.R.layout.simple_list_item_1, getResources().getStringArray(R.array.spinner));
@@ -135,36 +139,13 @@ public class ActualizarFruta extends AppCompatActivity implements Dialogo.Custom
                     String beneficios = edt_beneficiosAC.getText().toString();
 
                     if (!imagenUri.toString().equals("null")){
-                        Fruta fruta = new Fruta();
-                        fruta.setId_fruta(Integer.parseInt(id));
-                        fruta.setNombre(nombre);
-                        fruta.setColor(item_seleccionado);
-                        fruta.setCantidad(cantidad);
-                        fruta.setImagen(imagenUri.getPath());
-                        fruta.setDescripcion(descripcion);
-                        fruta.setBeneficios(beneficios);
-                        fruta.setVitaminas(resultado);
 
-                        AppDataBase appDataBase = AppDataBase.getInstance(this.getApplicationContext());
-                        appDataBase.frutaDao().actualizarFruta(fruta);
+                        ActualizarProductoPresenter.getPresenter(ActualizarFruta.this).executeUpdateImage(Integer.parseInt(id), nombre, item_seleccionado, cantidad, imagenUri.getPath(), descripcion, beneficios, resultado);
 
-                        Toast.makeText(ActualizarFruta.this, "Se ha actualizado la fruta", Toast.LENGTH_LONG).show();
-                        finish();
                     } else {
-                        Fruta fruta = new Fruta();
-                        fruta.setId_fruta(Integer.parseInt(id));
-                        fruta.setNombre(nombre);
-                        fruta.setColor(item_seleccionado);
-                        fruta.setCantidad(cantidad);
-                        fruta.setDescripcion(descripcion);
-                        fruta.setBeneficios(beneficios);
-                        fruta.setVitaminas(resultado);
 
-                        AppDataBase appDataBase = AppDataBase.getInstance(this.getApplicationContext());
-                        appDataBase.frutaDao().actualizarFruta(fruta);
+                        ActualizarProductoPresenter.getPresenter(ActualizarFruta.this).executeUpdate(Integer.parseInt(id), nombre, item_seleccionado, cantidad, descripcion, beneficios, resultado);
 
-                        Toast.makeText(ActualizarFruta.this, "Se ha actualizado la fruta", Toast.LENGTH_LONG).show();
-                        finish();
                     }
 
                 }else{
@@ -423,5 +404,11 @@ public class ActualizarFruta extends AppCompatActivity implements Dialogo.Custom
             public void onLoadCleared(Drawable placeholder) {
             }
         });
+    }
+
+    @Override
+    public void onSuccess(String message) {
+        Toast.makeText(ActualizarFruta.this, message, Toast.LENGTH_LONG).show();
+        finish();
     }
 }

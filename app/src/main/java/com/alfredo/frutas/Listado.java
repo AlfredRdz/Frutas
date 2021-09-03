@@ -16,6 +16,7 @@ import android.widget.ImageView;
 
 import com.alfredo.frutas.conexion.AppDataBase;
 import com.alfredo.frutas.datamodel.Fruta;
+import com.alfredo.frutas.interfaces.AgregarProductoMVP;
 import com.alfredo.frutas.interfaces.ListadoMVP;
 import com.alfredo.frutas.presenter.ListadoPresenter;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
