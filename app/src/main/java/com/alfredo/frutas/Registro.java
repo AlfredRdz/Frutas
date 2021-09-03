@@ -14,10 +14,12 @@ import android.widget.Toast;
 import com.alfredo.frutas.conexion.AppDataBase;
 import com.alfredo.frutas.datamodel.Usuario;
 import com.alfredo.frutas.databinding.ActivityRegistroBinding;
+import com.alfredo.frutas.interfaces.RegistroMVP;
+import com.alfredo.frutas.presenter.RegistroPresenter;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 
-public class Registro extends AppCompatActivity {
+public class Registro extends AppCompatActivity implements RegistroMVP.View {
 
     private ActivityRegistroBinding binding;
 
@@ -31,15 +33,7 @@ public class Registro extends AppCompatActivity {
         binding = ActivityRegistroBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-//        edt_reusuario = findViewById(R.id.edt_reusuario);
-//        edt_recontraseña = findViewById(R.id.edt_recontraseña);
-//        edt_repetircontraseña = findViewById(R.id.edt_repetircontraseña);
-//        btn_registrar = findViewById(R.id.btn_registrar);
-//
-//        textInputLayout3 = findViewById(R.id.textInputLayout3);
-//        textInputLayout6 = findViewById(R.id.textInputLayout6);
-//        textInputLayout7 = findViewById(R.id.textInputLayout7);
-
+        RegistroPresenter.getPresenter(Registro.this).setView(this);
 
         binding.edtReusuario.addTextChangedListener(new TextWatcher() {
             @Override
@@ -127,44 +121,56 @@ public class Registro extends AppCompatActivity {
                         Usuario comprobar = appDataBase.usuarioDao().comprobar(usuario);
 
                         if (comprobar == null){
-                            guardarUsuario(binding.edtReusuario.getText().toString(), binding.edtRecontraseA.getText().toString());
+                            //guardarUsuario(binding.edtReusuario.getText().toString(), binding.edtRecontraseA.getText().toString());
+                            RegistroPresenter.getPresenter(Registro.this).executeRegister(usuario, contraseña);
                         } else {
                             Toast.makeText(getApplicationContext(), "Usuario ya existe", Toast.LENGTH_LONG).show();
                         }
 
-
-
                     }else {
                         Toast.makeText(getBaseContext(), "Las contraseñas no coinciden", Toast.LENGTH_LONG).show();
-//                        textInputLayout6.setError("Las Contraseñas no coinciden");
-//                        textInputLayout7.setError("Las Contraseñas no coinciden");
+
                     }
-                }else {
-                    //Toast.makeText(getBaseContext(), "Debes llenar todos los campos", Toast.LENGTH_LONG).show();
-                    //edt_recontraseña.setError("Fallo");
-//                    textInputLayout6.setError("Deben ser minimo 8 caracteres");
-//                    textInputLayout7.setError("Deben ser minimo 8 caracteres");
                 }
             }
         });
     }
 
-    private void guardarUsuario(String nombre, String contraseña){
-        AppDataBase appDataBase = AppDataBase.getInstance(this.getApplicationContext());
+//    private void guardarUsuario(String nombre, String contraseña){
+//        AppDataBase appDataBase = AppDataBase.getInstance(this.getApplicationContext());
+//
+//        Usuario usuario = new Usuario();
+//        usuario.setUsuario(nombre);
+//        usuario.setContraseña(contraseña);
+//        appDataBase.usuarioDao().insertUsuario(usuario);
+//
+//        SharedPreferences preferences = getSharedPreferences("preferences", MODE_PRIVATE);
+//        SharedPreferences.Editor editor = preferences.edit();
+//        editor.putString("nombre" , nombre);
+//        editor.putString("contraseña", contraseña);
+//        editor.commit();
+//
+//        startActivity(new Intent(Registro.this, Listado.class));
+//        finish();
+//        Toast.makeText(getApplicationContext(), "Registro exitoso", Toast.LENGTH_LONG).show();
+//    }
 
-        Usuario usuario = new Usuario();
-        usuario.setUsuario(nombre);
-        usuario.setContraseña(contraseña);
-        appDataBase.usuarioDao().insertUsuario(usuario);
+    @Override
+    public void onSuccess(String message) {
+        startActivity(new Intent(Registro.this, Listado.class));
+        finish();
+        Toast.makeText(getApplicationContext(), "Registro exitoso", Toast.LENGTH_LONG).show();
+    }
 
+    @Override
+    public void onRegister(String name, String password) {
         SharedPreferences preferences = getSharedPreferences("preferences", MODE_PRIVATE);
         SharedPreferences.Editor editor = preferences.edit();
-        editor.putString("nombre" , nombre);
-        editor.putString("contraseña", contraseña);
+        editor.putString("nombre" , name);
+        editor.putString("contraseña", password);
         editor.commit();
 
         startActivity(new Intent(Registro.this, Listado.class));
         finish();
-        Toast.makeText(getApplicationContext(), "Registro exitoso", Toast.LENGTH_LONG).show();
     }
 }
