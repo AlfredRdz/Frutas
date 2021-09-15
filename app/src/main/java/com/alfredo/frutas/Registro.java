@@ -22,6 +22,7 @@ import com.google.android.material.textfield.TextInputLayout;
 public class Registro extends AppCompatActivity implements RegistroMVP.View {
 
     private ActivityRegistroBinding binding;
+    private RegistroMVP.Presenter presenter;
 
     TextInputEditText edt_reusuario, edt_recontraseña, edt_repetircontraseña;
     TextInputLayout textInputLayout6, textInputLayout7, textInputLayout3;
@@ -32,8 +33,6 @@ public class Registro extends AppCompatActivity implements RegistroMVP.View {
         super.onCreate(savedInstanceState);
         binding = ActivityRegistroBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
-
-        RegistroPresenter.getPresenter(Registro.this).setView(this);
 
         binding.edtReusuario.addTextChangedListener(new TextWatcher() {
             @Override
@@ -117,15 +116,18 @@ public class Registro extends AppCompatActivity implements RegistroMVP.View {
                         String usuario = binding.edtReusuario.getText().toString();
                         String contraseña = binding.edtRecontraseA.getText().toString();
 
-                        AppDataBase appDataBase = AppDataBase.getInstance(getApplicationContext());
-                        Usuario comprobar = appDataBase.usuarioDao().comprobar(usuario);
+//                        AppDataBase appDataBase = AppDataBase.getInstance(getApplicationContext());
+//                        Usuario comprobar = appDataBase.usuarioDao().comprobar(usuario);
+                        getPresenter().getContext(Registro.this);
+                        getPresenter().existsUser(usuario, contraseña);
 
-                        if (comprobar == null){
-                            //guardarUsuario(binding.edtReusuario.getText().toString(), binding.edtRecontraseA.getText().toString());
-                            RegistroPresenter.getPresenter(Registro.this).executeRegister(usuario, contraseña);
-                        } else {
-                            Toast.makeText(getApplicationContext(), "Usuario ya existe", Toast.LENGTH_LONG).show();
-                        }
+//                        if (comprobar == null){
+//                            //guardarUsuario(binding.edtReusuario.getText().toString(), binding.edtRecontraseA.getText().toString());
+//                            getPresenter().getContext(Registro.this);
+//                            getPresenter().executeRegister(usuario, contraseña);
+//                        } else {
+//                            Toast.makeText(getApplicationContext(), "Usuario ya existe", Toast.LENGTH_LONG).show();
+//                        }
 
                     }else {
                         Toast.makeText(getBaseContext(), "Las contraseñas no coinciden", Toast.LENGTH_LONG).show();
@@ -155,21 +157,27 @@ public class Registro extends AppCompatActivity implements RegistroMVP.View {
 //        Toast.makeText(getApplicationContext(), "Registro exitoso", Toast.LENGTH_LONG).show();
 //    }
 
+    private RegistroMVP.Presenter getPresenter(){
+        if (presenter == null) {
+            presenter = new RegistroPresenter(this);
+        }
+        return presenter;
+    }
+
     @Override
     public void onSuccess(String message) {
         startActivity(new Intent(Registro.this, Listado.class));
         finish();
-        Toast.makeText(getApplicationContext(), "Registro exitoso", Toast.LENGTH_LONG).show();
+        Toast.makeText(getApplicationContext(), "Registro exitoso", Toast.LENGTH_SHORT).show();
     }
 
     @Override
-    public void onRegister(String name, String password) {
-        SharedPreferences preferences = getSharedPreferences("preferences", MODE_PRIVATE);
-        SharedPreferences.Editor editor = preferences.edit();
-        editor.putString("nombre" , name);
-        editor.putString("contraseña", password);
-        editor.commit();
+    public void onFail(String message) {
+        Toast.makeText(getApplicationContext(), "Usuario ya existe", Toast.LENGTH_SHORT).show();
+    }
 
+    @Override
+    public void onRegister() {
         startActivity(new Intent(Registro.this, Listado.class));
         finish();
     }

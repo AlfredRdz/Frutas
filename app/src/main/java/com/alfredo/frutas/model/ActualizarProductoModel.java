@@ -7,53 +7,50 @@ import com.alfredo.frutas.datamodel.Fruta;
 import com.alfredo.frutas.interfaces.ActualizarProductoMVP;
 import com.alfredo.frutas.presenter.ActualizarProductoPresenter;
 
-public class ActualizarProductoModel {
+public class ActualizarProductoModel implements ActualizarProductoMVP.Model {
     private static final String TAG = "MODEL";
-    private static ActualizarProductoMVP.Model instance;
     private static ActualizarProductoMVP.Presenter presenter;
+    private Context context;
 
-    public static ActualizarProductoMVP.Model getInstance(Context context) {
-        if (instance == null) {
-            instance = new ActualizarProductoMVP.Model() {
-                @Override
-                public void setPresenter(ActualizarProductoMVP.Presenter presenter) {
-                    ActualizarProductoModel.presenter = presenter;
-                }
+    public ActualizarProductoModel(ActualizarProductoMVP.Presenter presenter){
+        this.presenter = presenter;
+    }
 
-                @Override
-                public void doUpdateImage(Integer id, String nombre, String color, Integer cantidad, String imagen, String descripcion, String beneficios, String vitaminas) {
-                    Fruta fruta = new Fruta();
-                    fruta.setId_fruta(id);
-                    fruta.setNombre(nombre);
-                    fruta.setColor(color);
-                    fruta.setCantidad(cantidad);
-                    fruta.setImagen(imagen);
-                    fruta.setDescripcion(descripcion);
-                    fruta.setBeneficios(beneficios);
-                    fruta.setVitaminas(vitaminas);
+    @Override
+    public void getContext(Context context) {
+        this.context = context;
+    }
 
-                    AppDataBase appDataBase = AppDataBase.getInstance(context);
-                    appDataBase.frutaDao().actualizarFruta(fruta);
-                    ActualizarProductoModel.presenter.onSuccess("Fruta Actualizada");
-                }
+    @Override
+    public void doUpdateImage(Integer id, String nombre, String color, Integer cantidad, String imagen, String descripcion, String beneficios, String vitaminas) {
+        Fruta fruta = new Fruta();
+        fruta.setId_fruta(id);
+        fruta.setNombre(nombre);
+        fruta.setColor(color);
+        fruta.setCantidad(cantidad);
+        fruta.setImagen(imagen);
+        fruta.setDescripcion(descripcion);
+        fruta.setBeneficios(beneficios);
+        fruta.setVitaminas(vitaminas);
 
-                @Override
-                public void doUpdate(Integer id, String nombre, String color, Integer cantidad, String descripcion, String beneficios, String vitaminas) {
-                    Fruta fruta = new Fruta();
-                    fruta.setId_fruta(id);
-                    fruta.setNombre(nombre);
-                    fruta.setColor(color);
-                    fruta.setCantidad(cantidad);
-                    fruta.setDescripcion(descripcion);
-                    fruta.setBeneficios(beneficios);
-                    fruta.setVitaminas(vitaminas);
+        AppDataBase appDataBase = AppDataBase.getInstance(context);
+        appDataBase.frutaDao().actualizarFruta(fruta);
+        ActualizarProductoModel.presenter.onSuccess("Fruta Actualizada");
+    }
 
-                    AppDataBase appDataBase = AppDataBase.getInstance(context);
-                    appDataBase.frutaDao().actualizarFruta(fruta);
-                    ActualizarProductoModel.presenter.onSuccess("Fruta Actualizada");
-                }
-            };
-        }
-        return instance;
+    @Override
+    public void doUpdate(Integer id, String nombre, String color, Integer cantidad, String descripcion, String beneficios, String vitaminas) {
+        Fruta fruta = new Fruta();
+        fruta.setId_fruta(id);
+        fruta.setNombre(nombre);
+        fruta.setColor(color);
+        fruta.setCantidad(cantidad);
+        fruta.setDescripcion(descripcion);
+        fruta.setBeneficios(beneficios);
+        fruta.setVitaminas(vitaminas);
+
+        AppDataBase appDataBase = AppDataBase.getInstance(context);
+        appDataBase.frutaDao().actualizarFruta(fruta);
+        ActualizarProductoModel.presenter.onSuccess("Fruta Actualizada");
     }
 }

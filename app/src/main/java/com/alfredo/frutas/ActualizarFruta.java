@@ -53,7 +53,7 @@ public class ActualizarFruta extends AppCompatActivity implements Dialogo.Custom
     Spinner spinner_agregar;
     ChipGroup chipGroupA;
 
-
+    private ActualizarProductoMVP.Presenter presenter;
     ArrayAdapter<CharSequence> adapter;
 
     private static final int CAMERA_REQUEST_CODE = 100;
@@ -86,8 +86,6 @@ public class ActualizarFruta extends AppCompatActivity implements Dialogo.Custom
         imageView2 = findViewById(R.id.imageView2);
         spinner_agregar = findViewById(R.id.spinner_agregar);
         chipGroupA = findViewById(R.id.chipGroupA);
-
-        ActualizarProductoPresenter.getPresenter(ActualizarFruta.this).setView(this);
 
 
         adapter = new ArrayAdapter<>(getApplicationContext(), android.R.layout.simple_list_item_1, getResources().getStringArray(R.array.spinner));
@@ -139,12 +137,12 @@ public class ActualizarFruta extends AppCompatActivity implements Dialogo.Custom
                     String beneficios = edt_beneficiosAC.getText().toString();
 
                     if (!imagenUri.toString().equals("null")){
-
-                        ActualizarProductoPresenter.getPresenter(ActualizarFruta.this).executeUpdateImage(Integer.parseInt(id), nombre, item_seleccionado, cantidad, imagenUri.getPath(), descripcion, beneficios, resultado);
+                        getPresenter().getContext(this);
+                        getPresenter().executeUpdateImage(Integer.parseInt(id), nombre, item_seleccionado, cantidad, imagenUri.getPath(), descripcion, beneficios, resultado);
 
                     } else {
-
-                        ActualizarProductoPresenter.getPresenter(ActualizarFruta.this).executeUpdate(Integer.parseInt(id), nombre, item_seleccionado, cantidad, descripcion, beneficios, resultado);
+                        getPresenter().getContext(this);
+                        getPresenter().executeUpdate(Integer.parseInt(id), nombre, item_seleccionado, cantidad, descripcion, beneficios, resultado);
 
                     }
 
@@ -404,6 +402,13 @@ public class ActualizarFruta extends AppCompatActivity implements Dialogo.Custom
             public void onLoadCleared(Drawable placeholder) {
             }
         });
+    }
+
+    private ActualizarProductoMVP.Presenter getPresenter(){
+        if (presenter == null) {
+            presenter = new ActualizarProductoPresenter(this);
+        }
+        return presenter;
     }
 
     @Override

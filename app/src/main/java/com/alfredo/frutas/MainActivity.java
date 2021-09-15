@@ -22,6 +22,7 @@ public class MainActivity extends AppCompatActivity implements LoginMVP.View {
 
     private static final String TAG = "View";
     private ActivityMainBinding binding;
+    private LoginMVP.Presenter presenter;
 
     SharedPreferences preferences;
     SharedPreferences.Editor editor;
@@ -32,7 +33,7 @@ public class MainActivity extends AppCompatActivity implements LoginMVP.View {
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        LoginPresenter.getPresenter(MainActivity.this).setView(this);
+        //LoginPresenter.getPresenter(MainActivity.this).setView(this);
 
         binding.textView4.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -51,7 +52,9 @@ public class MainActivity extends AppCompatActivity implements LoginMVP.View {
                     String nombre = binding.edtUsuario.getText().toString();
                     String contraseña = binding.edtContraseA.getText().toString();
 
-                    LoginPresenter.getPresenter(MainActivity.this).executeLogin(nombre, contraseña);
+                    getPresenter().getContext(MainActivity.this);
+                    getPresenter().executeLogin(nombre, contraseña);
+                    //LoginPresenter.getPresenter(MainActivity.this).executeLogin(nombre, contraseña);
 
 //                    AppDataBase appDataBase = AppDataBase.getInstance(getApplicationContext());
 //
@@ -79,6 +82,13 @@ public class MainActivity extends AppCompatActivity implements LoginMVP.View {
         });
     }
 
+    private LoginMVP.Presenter getPresenter () {
+        if (presenter == null) {
+            presenter = new LoginPresenter(this);
+        }
+        return presenter;
+    }
+
     @Override
     public void showProgressBar(boolean isShowing) {
         Log.i(TAG, "showProgressBar: " + isShowing);
@@ -86,13 +96,7 @@ public class MainActivity extends AppCompatActivity implements LoginMVP.View {
     }
 
     @Override
-    public void onSuccess(String name, String password) {
-        preferences = getSharedPreferences("preferences", MODE_PRIVATE);
-        editor = preferences.edit();
-        editor.putString("nombre" , name);
-        editor.putString("contraseña", password);
-        editor.commit();
-
+    public void onSuccess() {
         finish();
         Intent intent = new Intent(MainActivity.this, Listado.class);
         startActivity(intent);

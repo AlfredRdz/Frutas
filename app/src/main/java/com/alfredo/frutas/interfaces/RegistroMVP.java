@@ -1,20 +1,26 @@
 package com.alfredo.frutas.interfaces;
 
+import android.content.Context;
+
 public interface RegistroMVP {
     interface View {
         void onSuccess(String message);
-        void onRegister(String name, String password);
+        void onFail(String message);
+        void onRegister();
     }
 
     interface Presenter {
-        void setView(RegistroMVP.View view);
+        void getContext(Context context);
+        void existsUser(String usuario, String contraseña);
         void executeRegister(String name, String password);
         void onSucess(String message);
-        void onRegister(String name, String password);
+        void onFail(String message);
+        void onRegister();
     }
 
     interface Model {
-        void setPresenter(RegistroMVP.Presenter presenter);
+        void getContext(Context context);
+        void getUser(String usuario, String contraseña);
         void doRegister(String name, String password);
     }
 }

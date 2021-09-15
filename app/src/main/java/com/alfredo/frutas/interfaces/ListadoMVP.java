@@ -1,5 +1,7 @@
 package com.alfredo.frutas.interfaces;
 
+import android.content.Context;
+
 import com.alfredo.frutas.datamodel.Fruta;
 
 import java.util.List;
@@ -11,14 +13,13 @@ public interface ListadoMVP {
     }
 
     interface Presenter {
-        void setView(ListadoMVP.View view);
-        void executeAdapter();
+        void executeAdapter(Context context);
         void success(List<Fruta> frutaList);
     }
 
     interface Model {
-        void setPresenter(Presenter presenter);
         void doAdapte();
+        void getContext(Context context);
         List<Fruta> getFrutas();
     }
 }

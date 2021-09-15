@@ -6,35 +6,34 @@ import com.alfredo.frutas.datamodel.Fruta;
 import com.alfredo.frutas.interfaces.ListadoMVP;
 import com.alfredo.frutas.interfaces.LoginMVP;
 import com.alfredo.frutas.model.ListadoModel;
+import com.alfredo.frutas.model.LoginModel;
 
 import java.util.List;
 
-public class ListadoPresenter {
+public class ListadoPresenter implements ListadoMVP.Presenter{
     private static final String TAG = "Presenter";
-    private static ListadoMVP.Presenter instance;
+    private static ListadoMVP.Model model;
     public static ListadoMVP.View view;
 
-    public static ListadoMVP.Presenter getPresenter(Context context){
-        if (instance == null){
-            instance = new ListadoMVP.Presenter() {
-                @Override
-                public void setView(ListadoMVP.View view) {
-                    ListadoPresenter.view = view;
-                }
+    public ListadoPresenter(ListadoMVP.View view) {
+        this.view = view;
+    }
 
-                @Override
-                public void executeAdapter() {
-                    ListadoModel.getIntance(context).setPresenter(this);
-                    ListadoModel.getIntance(context).getFrutas();
-                }
-
-                @Override
-                public void success(List<Fruta> frutaList) {
-                    ListadoPresenter.view.showList(frutaList);
-                }
-            };
+    private ListadoMVP.Model getModel() {
+        if (model == null) {
+            model = new ListadoModel(this);
         }
+        return model;
+    }
 
-        return instance;
-    };
+    @Override
+    public void executeAdapter(Context context) {
+        getModel().getContext(context);
+        getModel().getFrutas();
+    }
+
+    @Override
+    public void success(List<Fruta> frutaList) {
+        view.showList(frutaList);
+    }
 }

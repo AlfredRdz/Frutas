@@ -56,6 +56,7 @@ public class AgregarFruta extends AppCompatActivity implements Dialogo.Custom_di
     Chip chipA, chipC, chipD, chipE, chipK, chipB1;
 
     ArrayAdapter<String> adapter;
+    private AgregarProductoMVP.Presenter presenter;
 
 
     private static final int CAMERA_REQUEST_CODE = 100;
@@ -95,8 +96,6 @@ public class AgregarFruta extends AppCompatActivity implements Dialogo.Custom_di
         chipE = findViewById(R.id.chipE);
         chipK = findViewById(R.id.chipK);
         chipB1 = findViewById(R.id.chipB1);
-
-        AgregarProductoPresenter.getPresenter(AgregarFruta.this).setView(this);
 
         adapter = new ArrayAdapter<String>(getApplicationContext(), android.R.layout.simple_list_item_1, getResources().getStringArray(R.array.spinner));
         spinner_fruta.setAdapter(adapter);
@@ -166,12 +165,12 @@ public class AgregarFruta extends AppCompatActivity implements Dialogo.Custom_di
                     //////////////////////////////////////////////////////////
 
                     if (imagenUri != null){
-
-                        AgregarProductoPresenter.getPresenter(AgregarFruta.this).executeRegisterImage(nombre, item_seleccionado, cantidad, imagenUri.getPath(), descripcion, beneficios, resultado);
+                        getPresenter().getContext(this);
+                        getPresenter().executeRegisterImage(nombre, item_seleccionado, cantidad, imagenUri.getPath(), descripcion, beneficios, resultado);
 
                     } else {
-
-                        AgregarProductoPresenter.getPresenter(AgregarFruta.this).executeRegister(nombre, item_seleccionado, cantidad, descripcion, beneficios, resultado);
+                        getPresenter().getContext(this);
+                        getPresenter().executeRegister(nombre, item_seleccionado, cantidad, descripcion, beneficios, resultado);
 
 
                     }
@@ -387,6 +386,13 @@ public class AgregarFruta extends AppCompatActivity implements Dialogo.Custom_di
             public void onLoadCleared(Drawable placeholder) {
             }
         });
+    }
+
+    private AgregarProductoMVP.Presenter getPresenter() {
+        if (presenter == null) {
+            presenter = new AgregarProductoPresenter(this);
+        }
+        return presenter;
     }
 
     @Override

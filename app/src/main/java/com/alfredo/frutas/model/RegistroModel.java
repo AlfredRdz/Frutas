@@ -5,6 +5,7 @@ import static android.content.Context.MODE_PRIVATE;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.util.Log;
 
 import com.alfredo.frutas.Listado;
 import com.alfredo.frutas.Registro;
@@ -13,33 +14,50 @@ import com.alfredo.frutas.datamodel.Usuario;
 import com.alfredo.frutas.interfaces.RegistroMVP;
 import com.alfredo.frutas.presenter.RegistroPresenter;
 
-public class RegistroModel {
+public class RegistroModel implements RegistroMVP.Model {
     private static final String TAG = "MODEL";
-    private static RegistroMVP.Model instance;
     private static RegistroMVP.Presenter presenter;
+    private Context context;
 
-    public static RegistroMVP.Model getInstance(Context context) {
-        if (instance == null) {
-            instance = new RegistroMVP.Model() {
-                @Override
-                public void setPresenter(RegistroMVP.Presenter presenter) {
-                    RegistroModel.presenter = presenter;
-                }
+    public RegistroModel(RegistroMVP.Presenter presenter) {
+        this.presenter = presenter;
+    }
 
-                @Override
-                public void doRegister(String name, String password) {
-                    AppDataBase appDataBase = AppDataBase.getInstance(context);
+    @Override
+    public void getContext(Context context) {
+        this.context = context;
+    }
 
-                    Usuario usuario = new Usuario();
-                    usuario.setUsuario(name);
-                    usuario.setContraseña(password);
-                    appDataBase.usuarioDao().insertUsuario(usuario);
+    @Override
+    public void getUser(String usuario, String contraseña) {
+        AppDataBase appDataBase = AppDataBase.getInstance(context);
+        Usuario comprobar = appDataBase.usuarioDao().comprobar(usuario);
 
-                    RegistroModel.presenter.onSucess("Registro exito");
-                    RegistroModel.presenter.onRegister(name, password);
-                }
-            };
+        if (comprobar == null){
+            Log.i(TAG, "No Existe");
+            presenter.onSucess("No existe");
+            doRegister(usuario, contraseña);
+        } else {
+            Log.i(TAG, "Ya Existe");
+            presenter.onFail("Ya Existe");
         }
-        return instance;
+    }
+
+    @Override
+    public void doRegister(String name, String password) {
+        AppDataBase appDataBase = AppDataBase.getInstance(context);
+
+        Usuario usuario = new Usuario();
+        usuario.setUsuario(name);
+        usuario.setContraseña(password);
+        appDataBase.usuarioDao().insertUsuario(usuario);
+
+        presenter.onSucess("Registro exito");
+        SharedPreferences preferences = context.getSharedPreferences("preferences", MODE_PRIVATE);
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putString("nombre" , name);
+        editor.putString("contraseña", password);
+        editor.commit();
+        presenter.onRegister();
     }
 }

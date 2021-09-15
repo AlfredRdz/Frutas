@@ -3,50 +3,50 @@ package com.alfredo.frutas.model;
 import static android.content.Context.MODE_PRIVATE;
 
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.util.Log;
-import android.widget.Toast;
 
-import com.alfredo.frutas.Listado;
+import com.alfredo.frutas.MainActivity;
 import com.alfredo.frutas.conexion.AppDataBase;
 import com.alfredo.frutas.datamodel.Usuario;
 import com.alfredo.frutas.interfaces.LoginMVP;
 
-public class LoginModel {
+public class LoginModel implements LoginMVP.Model {
     private static final String TAG = "Model";
-    private static LoginMVP.Model instance;
-    public static LoginMVP.Presenter presenter;
+    private  LoginMVP.Presenter presenter;
+    private Context context;
 
-    static SharedPreferences preferences;
-    static SharedPreferences.Editor editor;
+    SharedPreferences preferences;
+    SharedPreferences.Editor editor;
 
-    public static LoginMVP.Model getInstance(Context context) {
-        if (instance == null){
-            instance = new LoginMVP.Model() {
-                @Override
-                public void setPresenter(LoginMVP.Presenter presenter) {
-                    LoginModel.presenter = presenter;
-                }
+    public LoginModel(LoginMVP.Presenter presenter) {
+        this.presenter = presenter;
+    }
 
-                @Override
-                public void doLogin(String name, String password) {
-                    Log.i(TAG, "doLogin: " + name + " " + password);
+    @Override
+    public void getContext(Context context) {
+        this.context = context;
+    }
 
-                    AppDataBase appDataBase = AppDataBase.getInstance(context);
+    @Override
+    public void doLogin(String name, String password) {
+        Log.i(TAG, "doLogin: " + name + " " + password);
+        MainActivity activity = new MainActivity();
 
-                    Usuario usuario = appDataBase.usuarioDao().login(name, password);
+        AppDataBase appDataBase = AppDataBase.getInstance(context);
 
-                    if (usuario != null){
-                        LoginModel.presenter.success(usuario.getUsuario(), usuario.getContraseña());
+        Usuario usuario = appDataBase.usuarioDao().login(name, password);
 
-                    } else {
-                        LoginModel.presenter.onResponse("fallo desde el model" + usuario);
-                    }
+        if (usuario != null){
+            preferences = context.getSharedPreferences("preferences", MODE_PRIVATE);
+            editor = preferences.edit();
+            editor.putString("nombre" , name);
+            editor.putString("contraseña", password);
+            editor.commit();
+            presenter.success();
 
-                }
-            };
+        } else {
+            presenter.onResponse("fallo desde el model" + usuario);
         }
-        return instance;
     }
 }

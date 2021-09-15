@@ -5,36 +5,49 @@ import android.content.Context;
 import com.alfredo.frutas.interfaces.RegistroMVP;
 import com.alfredo.frutas.model.RegistroModel;
 
-public class RegistroPresenter {
+public class RegistroPresenter implements RegistroMVP.Presenter {
     private static final String TAG = "PRESENTER";
-    private static RegistroMVP.Presenter instance;
+    private static RegistroMVP.Model model;
     public static RegistroMVP.View view;
 
-    public static RegistroMVP.Presenter getPresenter(Context context) {
-        if (instance == null) {
-            instance = new RegistroMVP.Presenter() {
-                @Override
-                public void setView(RegistroMVP.View view) {
-                    RegistroPresenter.view = view;
-                }
+    public RegistroPresenter(RegistroMVP.View view){
+        this.view = view;
+    }
 
-                @Override
-                public void executeRegister(String name, String password) {
-                    RegistroModel.getInstance(context).setPresenter(this);
-                    RegistroModel.getInstance(context).doRegister(name, password);
-                }
-
-                @Override
-                public void onSucess(String message) {
-                    RegistroPresenter.view.onSuccess(message);
-                }
-
-                @Override
-                public void onRegister(String name, String password) {
-                    RegistroPresenter.view.onRegister(name, password);
-                }
-            };
+    private RegistroMVP.Model getModel(){
+        if (model == null) {
+            model = new RegistroModel(this);
         }
-        return instance;
+        return model;
+    }
+
+    @Override
+    public void getContext(Context context) {
+        getModel().getContext(context);
+    }
+
+    @Override
+    public void existsUser(String usuario, String contraseña) {
+        getModel().getUser(usuario, contraseña);
+    }
+
+    @Override
+    public void executeRegister(String name, String password) {
+        getModel().doRegister(name, password);
+    }
+
+    @Override
+    public void onSucess(String message) {
+        view.onSuccess(message);
+    }
+
+    @Override
+    public void onFail(String message) {
+        view.onFail(message);
+    }
+
+    @Override
+    public void onRegister() {
+        view.onRegister();
     }
 }

@@ -28,6 +28,7 @@ public class Listado extends AppCompatActivity implements ListadoMVP.View {
     FloatingActionButton btn_agregar;
     RecyclerView recyclerView;
     ImageView imageView_vaciop;
+    private ListadoMVP.Presenter presenter;
 
     FrutaAdapter customAdapter;
     List<Fruta> lista ;
@@ -43,12 +44,14 @@ public class Listado extends AppCompatActivity implements ListadoMVP.View {
 //        recyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
 //        recyclerView.setHasFixedSize(true);
 
-        ListadoPresenter.getPresenter(Listado.this).setView(this);
 
         recyclerView.setLayoutManager(new GridLayoutManager(this, 2));
         recyclerView.setHasFixedSize(true);
 
-        ListadoPresenter.getPresenter(Listado.this).executeAdapter();
+        customAdapter = new FrutaAdapter(getApplicationContext());
+        recyclerView.setAdapter(customAdapter);
+
+        getPresenter().executeAdapter(this);
 
 //        AppDataBase appDataBase = AppDataBase.getInstance(this.getApplicationContext());
 //        List<Fruta> lista = appDataBase.frutaDao().getAllFrutas();
@@ -73,7 +76,7 @@ public class Listado extends AppCompatActivity implements ListadoMVP.View {
     public void onResume() {
         super.onResume();
 
-        ListadoPresenter.getPresenter(Listado.this).executeAdapter();
+        getPresenter().executeAdapter(this);
 
 //        AppDataBase appDataBase = AppDataBase.getInstance(this.getApplicationContext());
 //        List<Fruta> lista = appDataBase.frutaDao().getAllFrutas();
@@ -100,11 +103,18 @@ public class Listado extends AppCompatActivity implements ListadoMVP.View {
 
             @Override
             public boolean onQueryTextChange(String newText) {
-                customAdapter.getFilter().filter(newText.toString());
+                //customAdapter.getFilter().filter(newText.toString());
                 return false;
             }
         });
         return true;
+    }
+
+    private ListadoMVP.Presenter getPresenter() {
+        if (presenter == null) {
+            presenter = new ListadoPresenter(this);
+        }
+        return presenter;
     }
 
     @Override
@@ -136,13 +146,13 @@ public class Listado extends AppCompatActivity implements ListadoMVP.View {
     @Override
     public void showList(List<Fruta> frutaList) {
         List<Fruta> lista = frutaList;
-
-        if (lista.size() > 0){
-            customAdapter = new FrutaAdapter(lista, getApplicationContext());
-            recyclerView.setAdapter(customAdapter);
-            imageView_vaciop.setVisibility(View.GONE);
-        }else{
-            imageView_vaciop.setVisibility(View.VISIBLE);
-        }
+        customAdapter.setFrutas(frutaList);
+//        if (lista.size() > 0){
+//            customAdapter = new FrutaAdapter(lista, getApplicationContext());
+//            recyclerView.setAdapter(customAdapter);
+//            imageView_vaciop.setVisibility(View.GONE);
+//        }else{
+//            imageView_vaciop.setVisibility(View.VISIBLE);
+//        }
     }
 }

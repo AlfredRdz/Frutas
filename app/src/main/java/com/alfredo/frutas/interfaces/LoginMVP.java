@@ -1,22 +1,24 @@
 package com.alfredo.frutas.interfaces;
 
+import android.content.Context;
+
 public interface LoginMVP {
 
     interface View {
         void showProgressBar(boolean isShowing);
-        void onSuccess(String name, String password);
+        void onSuccess();
     }
 
     interface Presenter {
-        void setView(LoginMVP.View view);
+        void getContext(Context context);
         void executeLogin(String name, String password);
         void onResponse(String response);
 
-        void success(String name, String password);
+        void success();
     }
 
     interface Model {
-        void setPresenter(LoginMVP.Presenter presenter);
+        void getContext(Context context);
         void doLogin(String name, String password);
     }
 }

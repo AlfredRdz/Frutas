@@ -25,16 +25,19 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-public class FrutaAdapter extends RecyclerView.Adapter<FrutaAdapter.MyViewHolder> implements Filterable {
+public class FrutaAdapter extends RecyclerView.Adapter<FrutaAdapter.MyViewHolder> {
 
     List<Fruta> frutas;
-    List<Fruta> frutasAll;
     Context context;
 
-    public FrutaAdapter(List<Fruta> frutas, Context context){
-        this.frutas = frutas;
+    public FrutaAdapter(Context context){
+        frutas = new ArrayList<>();
         this.context = context;
-        this.frutasAll = new ArrayList<>(frutas);
+    }
+    
+    public void setFrutas(List<Fruta> frutas) {
+        this.frutas = frutas;
+        notifyDataSetChanged();
     }
 
     @NonNull
@@ -119,39 +122,6 @@ public class FrutaAdapter extends RecyclerView.Adapter<FrutaAdapter.MyViewHolder
     public int getItemCount() {
         return frutas.size();
     }
-
-
-    @Override
-    public Filter getFilter() {
-        return FilterUser;
-    }
-
-    private Filter FilterUser = new Filter() {
-        @Override
-        protected FilterResults performFiltering(CharSequence constraint) {
-            String search = constraint.toString().toLowerCase();
-            List<Fruta> templist = new ArrayList<>();
-            if (search.length() == 0 || search.isEmpty()){
-                templist.addAll(frutasAll);
-            } else {
-                for (Fruta f: frutasAll){
-                    if (f.getNombre().toLowerCase().contains(search)){
-                        templist.add(f);
-                    }
-                }
-            }
-            FilterResults filterResults = new FilterResults();
-            filterResults.values = templist;
-            return filterResults;
-        }
-
-        @Override
-        protected void publishResults(CharSequence constraint, FilterResults results) {
-            frutas.clear();
-            frutas.addAll((Collection<? extends Fruta>) results.values);
-            notifyDataSetChanged();
-        }
-    };
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
         TextView txt_nombre, txt_cantidad;
